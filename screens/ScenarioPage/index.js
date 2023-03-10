@@ -1,11 +1,8 @@
-import { Button, StyleSheet, Text, View } from 'react-native';
+import { Button, StyleSheet } from 'react-native';
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import ScenarioScreen from './ScenarioScreen';
 import AddScenarioScreen from './AddScenarioScreen';
-import { getHeaderTitle } from '@react-navigation/elements';
-import Header from '../../components/UI/Header';
-import BackButton from '../../components/UI/BackButton';
 import { Colors } from '../../constants/colors';
 
 const Stack = createNativeStackNavigator();
@@ -15,9 +12,6 @@ const ScenarioStackOptions = ({ navigation, back }) => ({
   headerTitleStyle: {
     color: '#000',
   },
-  // headerRight: () => (
-  //   <Button color={Colors.orangePrimary} title='Done' />
-  // )
 });
 
 const NewScenarioOptions = {
@@ -34,7 +28,6 @@ const NewScenarioOptions = {
 
 export default function ScenarioStack() {
   return (
-    // <SafeAreaView>
     <Stack.Navigator screenOptions={ScenarioStackOptions}>
       <Stack.Screen name="Scenario" component={ScenarioScreen} />
       <Stack.Screen
@@ -43,7 +36,6 @@ export default function ScenarioStack() {
         component={AddScenarioScreen}
       />
     </Stack.Navigator>
-    // </SafeAreaView>
   );
 }
 

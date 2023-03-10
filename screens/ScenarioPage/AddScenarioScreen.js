@@ -9,7 +9,6 @@ export default function AddScenarioScreen() {
 
   return (
     <ScrollView style={defaultStyles.container}>
-      {/* <Text>Scenario Name:</Text> */}
       <TextInput style={styles.nameInput} placeholder="Scenario name:" />
       <View style={styles.section}>
         <Text style={defaultStyles.sectionTitle}>Accessories</Text>
@@ -39,11 +38,8 @@ const styles = StyleSheet.create({
   nameInput: {
     paddingVertical: 12,
     paddingHorizontal: 12,
-    // borderWidth: 1,
     borderRadius: 12,
     backgroundColor: '#fff',
-    // height: 50,
-    // marginHorizontal: 24,
     fontSize: 24,
     fontWeight: 'bold',
   },
