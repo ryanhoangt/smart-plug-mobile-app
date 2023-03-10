@@ -1,20 +1,22 @@
-import { StatusBar } from "expo-status-bar";
-import { useFonts } from "expo-font";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { NavigationContainer } from "@react-navigation/native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
+import { StatusBar } from 'expo-status-bar';
+import { useFonts } from 'expo-font';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
-import OnboardScreen from "./screens/OnboardScreen";
-import LoginScreen from "./screens/LoginScreen";
-import SignupScreen from "./screens/SignupScreen";
-import HomeScreen from "./screens/HomeScreen";
-import AutomationScreen from "./screens/AutomationScreen";
-import ScenarioScreen from "./screens/ScenarioScreen";
-import StatisticScreen from "./screens/StatisticScreen";
+import OnboardScreen from './screens/OnboardScreen';
+import LoginScreen from './screens/LoginScreen';
+import SignupScreen from './screens/SignupScreen';
+import HomeScreen from './screens/HomeScreen';
+import AutomationScreen from './screens/AutomationScreen';
+import ScenarioScreen, {
+  ScenarioScreenOptions,
+} from './screens/ScenarioScreen';
+import StatisticScreen from './screens/StatisticScreen';
 
-import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
+import * as SplashScreen from 'expo-splash-screen';
+import { useEffect } from 'react';
 
 SplashScreen.preventAutoHideAsync()
   .then((_) => {})
@@ -30,8 +32,7 @@ function AuthStack() {
         {
           //
         }
-      }
-    >
+      }>
       <Stack.Screen name="Onboard" component={OnboardScreen} />
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="Signup" component={SignupScreen} />
@@ -49,7 +50,11 @@ function AuthenticatedStack() {
         component={HomeScreen}
       />
       <Tab.Screen name="Automation" component={AutomationScreen} />
-      <Tab.Screen name="Scenario" component={ScenarioScreen} />
+      <Tab.Screen
+        name="Scenario"
+        component={ScenarioScreen}
+        options={ScenarioScreenOptions}
+      />
       <Tab.Screen name="Statistic" component={StatisticScreen} />
     </Tab.Navigator>
   );
@@ -66,10 +71,10 @@ function Navigation() {
 
 export default function App() {
   const [fontsLoaded] = useFonts({
-    "open-sans": require("./assets/fonts/OpenSans-Regular.ttf"),
-    "open-sans-bold": require("./assets/fonts/OpenSans-Bold.ttf"),
-    "be-vietnam": require("./assets/fonts/BeVietnamPro-Regular.ttf"),
-    "epilogue-700": require("./assets/fonts/Epilogue-SemiBold-700.ttf"),
+    'open-sans': require('./assets/fonts/OpenSans-Regular.ttf'),
+    'open-sans-bold': require('./assets/fonts/OpenSans-Bold.ttf'),
+    'be-vietnam': require('./assets/fonts/BeVietnamPro-Regular.ttf'),
+    'epilogue-700': require('./assets/fonts/Epilogue-SemiBold-700.ttf'),
   });
 
   useEffect(() => {
