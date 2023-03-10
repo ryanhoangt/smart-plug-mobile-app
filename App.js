@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { useFonts } from "expo-font";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -11,6 +11,13 @@ import HomeScreen from "./screens/HomeScreen";
 import AutomationScreen from "./screens/AutomationScreen";
 import ScenarioScreen from "./screens/ScenarioScreen";
 import StatisticScreen from "./screens/StatisticScreen";
+
+import * as SplashScreen from "expo-splash-screen";
+import { useEffect } from "react";
+
+SplashScreen.preventAutoHideAsync()
+  .then((_) => {})
+  .catch(console.warn);
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -35,7 +42,11 @@ function AuthStack() {
 function AuthenticatedStack() {
   return (
     <Tab.Navigator>
-      <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen
+        options={{ headerShown: false }}
+        name="Home"
+        component={HomeScreen}
+      />
       <Tab.Screen name="Automation" component={AutomationScreen} />
       <Tab.Screen name="Scenario" component={ScenarioScreen} />
       <Tab.Screen name="Statistic" component={StatisticScreen} />
@@ -53,6 +64,22 @@ function Navigation() {
 }
 
 export default function App() {
+  const [fontsLoaded] = useFonts({
+    "open-sans": require("./assets/fonts/OpenSans-Regular.ttf"),
+    "open-sans-bold": require("./assets/fonts/OpenSans-Bold.ttf"),
+  });
+
+  useEffect(() => {
+    async function hideSplashScreen() {
+      await SplashScreen.hideAsync();
+    }
+    if (fontsLoaded) {
+      hideSplashScreen();
+    }
+  }, [fontsLoaded]);
+
+  if (!fontsLoaded) return null;
+
   return (
     <>
       <StatusBar style="auto" />
