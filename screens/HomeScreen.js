@@ -4,6 +4,7 @@ import FlatButton from "../components/UI/FlatButton";
 import DeviceController from "../components/Home/DeviceController";
 import { Colors } from "../constants/colors";
 import { useEffect, useState } from "react";
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
 
 const avatarPlaceholderImg = require("../assets/images/avatar-placeholder.jpg");
 
@@ -32,43 +33,44 @@ function HomeScreen() {
   }, []);
 
   return (
-    <ScrollView style={styles.homeContainer}>
-      <StatusBar style="auto" />
-      <View style={styles.welcomeHeading}>
-        <View style={styles.headingTextContainer}>
-          <Text style={{ color: "#9BA4B0" }}>{timeString}</Text>
-          <Text style={[styles.welcomeText, { fontWeight: 800 }]}>
-            Welcome, Hoang!
-          </Text>
+    <SafeAreaView>
+      <ScrollView style={styles.homeContainer}>
+        <StatusBar style="auto" />
+        <View style={styles.welcomeHeading}>
+          <View style={styles.headingTextContainer}>
+            <Text style={{ color: "#9BA4B0" }}>{timeString}</Text>
+            <Text style={[styles.welcomeText, { fontWeight: 800 }]}>
+              Welcome, Hoang!
+            </Text>
+          </View>
+          <Image source={avatarPlaceholderImg} style={styles.avatarImg} />
         </View>
-        <Image source={avatarPlaceholderImg} style={styles.avatarImg} />
-      </View>
-      <View style={styles.scenariosContainer}>
-        <Text style={styles.sectionText}>Scenarios</Text>
-        <FlatButton fontSize={20} textAlign="left" style={styles.scenarioBtn}>
-          Go out
-        </FlatButton>
-        <FlatButton fontSize={20} textAlign="left" style={styles.scenarioBtn}>
-          Morning
-        </FlatButton>
-      </View>
-      <View style={styles.devicesContainer}>
-        <Text style={styles.sectionText}>Devices</Text>
-        <Text style={styles.addDeviceInstructionText}>
-          To add a new device, please manually connect it to the central server.
-        </Text>
-
-        <DeviceController deviceName="Air Conditioner" />
-        <DeviceController deviceName="Room Lights" />
-        <DeviceController deviceName="Speakers" />
-      </View>
-    </ScrollView>
+        <View style={styles.scenariosContainer}>
+          <Text style={styles.sectionText}>Scenarios</Text>
+          <FlatButton fontSize={20} textAlign="left" style={styles.scenarioBtn}>
+            Go out
+          </FlatButton>
+          <FlatButton fontSize={20} textAlign="left" style={styles.scenarioBtn}>
+            Morning
+          </FlatButton>
+        </View>
+        <View style={styles.devicesContainer}>
+          <Text style={styles.sectionText}>Devices</Text>
+          <Text style={styles.addDeviceInstructionText}>
+            To add a new device, please manually connect it to the central server.
+          </Text>
+          <DeviceController deviceName="Air Conditioner" />
+          <DeviceController deviceName="Room Lights" />
+          <DeviceController deviceName="Speakers" />
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   homeContainer: {
-    padding: 30,
+    paddingHorizontal: 20
   },
   welcomeHeading: {
     // backgroundColor: "green",
@@ -122,7 +124,7 @@ const styles = StyleSheet.create({
   welcomeText: {
     fontFamily: "epilogue-700",
     fontWeight: "bold",
-    fontSize: 32,
+    fontSize: 24,
     marginTop: 5,
   },
 });

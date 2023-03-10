@@ -3,6 +3,7 @@ import { useFonts } from "expo-font";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
 
 import OnboardScreen from "./screens/OnboardScreen";
 import LoginScreen from "./screens/LoginScreen";
@@ -83,10 +84,10 @@ export default function App() {
   if (!fontsLoaded) return null;
 
   return (
-    <>
+    <SafeAreaProvider>
       <StatusBar style="auto" />
 
       <Navigation />
-    </>
+    </SafeAreaProvider>
   );
 }
