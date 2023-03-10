@@ -67,6 +67,8 @@ export default function App() {
   const [fontsLoaded] = useFonts({
     "open-sans": require("./assets/fonts/OpenSans-Regular.ttf"),
     "open-sans-bold": require("./assets/fonts/OpenSans-Bold.ttf"),
+    "be-vietnam": require("./assets/fonts/BeVietnamPro-Regular.ttf"),
+    "epilogue-700": require("./assets/fonts/Epilogue-SemiBold-700.ttf"),
   });
 
   useEffect(() => {
