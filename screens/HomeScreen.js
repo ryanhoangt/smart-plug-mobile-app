@@ -4,7 +4,7 @@ import FlatButton from "../components/UI/FlatButton";
 import DeviceController from "../components/Home/DeviceController";
 import { Colors } from "../constants/colors";
 import { useEffect, useState } from "react";
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 const avatarPlaceholderImg = require("../assets/images/avatar-placeholder.jpg");
 
@@ -33,7 +33,7 @@ function HomeScreen() {
   }, []);
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{ flex: 1 }}>
       <ScrollView style={styles.homeContainer}>
         <StatusBar style="auto" />
         <View style={styles.welcomeHeading}>
@@ -57,7 +57,8 @@ function HomeScreen() {
         <View style={styles.devicesContainer}>
           <Text style={styles.sectionText}>Devices</Text>
           <Text style={styles.addDeviceInstructionText}>
-            To add a new device, please manually connect it to the central server.
+            To add a new device, please manually connect it to the central
+            server.
           </Text>
           <DeviceController deviceName="Air Conditioner" />
           <DeviceController deviceName="Room Lights" />
@@ -70,7 +71,7 @@ function HomeScreen() {
 
 const styles = StyleSheet.create({
   homeContainer: {
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
   },
   welcomeHeading: {
     // backgroundColor: "green",
