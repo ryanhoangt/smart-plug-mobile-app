@@ -4,7 +4,3 @@ export const Colors = {
   grayPrimary: "#A6A6A6",
   background: "#F8F9F9"
 };
-
-export const customHeaderStyle = {
-  
-}

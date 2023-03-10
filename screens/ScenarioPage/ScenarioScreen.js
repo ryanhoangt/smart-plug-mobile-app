@@ -1,31 +1,26 @@
 import { StatusBar } from 'expo-status-bar';
 import { Button, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Colors } from '../constants/colors';
-import ScenarioButton from '../components/UI/ScenarioButton';
-import Header from '../components/UI/Header';
+import { Colors } from '../../constants/colors';
+import ScenarioButton from '../../components/UI/ScenarioButton';
+import Header from '../../components/UI/Header';
+import { defaultStyles } from '../../constants/defaultStyle';
 
 export const ScenarioScreenOptions = {
-  // title: 'My home',
   headerShown: false,
   headerStyle: {
     backgroundColor: Colors.background,
   },
-  // headerTintColor: '#fff',
-  // headerTitleStyle: {
-  //   fontWeight: 'bold',
-  // },
 };
 
-function ScenarioScreen() {
+function ScenarioScreen({navigation}) {
   function handleAddScenario() {
-    console.log('Add scenario');
+    navigation.navigate("New Scenario")
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={defaultStyles.container} edges={["bottom", "left", "right"]}>
       <StatusBar style="auto" />
-      <Header title="Scenario" />
       <ScrollView style={styles.scenarioList}>
         <ScenarioButton text="Go out" />
         <ScenarioButton text="Morning" />
@@ -44,15 +39,8 @@ function ScenarioScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    paddingHorizontal: 12,
-    backgroundColor: '#fff',
-    flex: 1,
-    // alignItems: 'center',
-    // justifyContent: 'center',
-  },
   scenarioList: {
-    marginTop: 12,
+    // marginTop: 12,
     // backgroundColor: "red",
     // flex: 1
   },
