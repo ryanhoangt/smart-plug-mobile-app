@@ -32,8 +32,7 @@ export default DeviceController;
 const styles = StyleSheet.create({
   deviceContainer: {
     backgroundColor: "white",
-    width: "44%",
-    margin: 10,
+    width: "48%",
     borderRadius: 12,
     padding: 8,
     elevation: 4, // add shadow - android only

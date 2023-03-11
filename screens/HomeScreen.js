@@ -60,9 +60,11 @@ function HomeScreen() {
             To add a new device, please manually connect it to the central
             server.
           </Text>
-          <DeviceController deviceName="Air Conditioner" />
-          <DeviceController deviceName="Room Lights" />
-          <DeviceController deviceName="Speakers" />
+          {/* <View> */}
+            <DeviceController deviceName="Air Conditioner" />
+            <DeviceController deviceName="Room Lights" />
+            <DeviceController deviceName="Speakers" />
+          {/* </View> */}
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -90,6 +92,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: 1,
     justifyContent: "space-between",
+    gap: 12,
   },
   avatarImg: {
     width: 50,
