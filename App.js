@@ -3,16 +3,14 @@ import { useFonts } from 'expo-font';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import OnboardScreen from './screens/OnboardScreen';
 import LoginScreen from './screens/LoginScreen';
 import SignupScreen from './screens/SignupScreen';
 import HomeScreen from './screens/HomeScreen';
 import AutomationScreen from './screens/AutomationScreen';
-import ScenarioScreen, {
-  ScenarioScreenOptions,
-} from './screens/ScenarioPage/ScenarioScreen';
+import { ScenarioScreenOptions } from './screens/ScenarioPage/ScenarioScreen';
 import StatisticScreen from './screens/StatisticScreen';
 
 import * as SplashScreen from 'expo-splash-screen';
@@ -33,7 +31,8 @@ function AuthStack() {
         {
           //
         }
-      }>
+      }
+    >
       <Stack.Screen name="Onboard" component={OnboardScreen} />
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="Signup" component={SignupScreen} />
@@ -52,7 +51,7 @@ function AuthenticatedStack() {
       />
       <Tab.Screen name="Automation" component={AutomationScreen} />
       <Tab.Screen
-        name="Scenario"
+        name="Scenario Stack"
         component={ScenarioStack}
         options={ScenarioScreenOptions}
       />
