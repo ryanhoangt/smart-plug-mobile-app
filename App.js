@@ -9,13 +9,15 @@ import OnboardScreen from './screens/OnboardScreen';
 import LoginScreen from './screens/LoginScreen';
 import SignupScreen from './screens/SignupScreen';
 import HomeScreen from './screens/HomeScreen';
-import AutomationScreen from './screens/AutomationScreen';
+import AutomationScreen from './screens/AutomationPage/AutomationScreen';
 import { ScenarioScreenOptions } from './screens/ScenarioPage/ScenarioScreen';
 import StatisticScreen from './screens/StatisticScreen';
 
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import ScenarioStack from './screens/ScenarioPage';
+import AutomationStack from './screens/AutomationPage/AutomationStack';
+import { AutomationScreenOptions } from './screens/AutomationPage/AutomationStack';
 
 SplashScreen.preventAutoHideAsync()
   .then((_) => {})
@@ -49,7 +51,11 @@ function AuthenticatedStack() {
         name="Home"
         component={HomeScreen}
       />
-      <Tab.Screen name="Automation" component={AutomationScreen} />
+      <Tab.Screen 
+        name="Automation Stack" 
+        component={AutomationStack} 
+        options={AutomationScreenOptions}  
+      />
       <Tab.Screen
         name="Scenario Stack"
         component={ScenarioStack}
