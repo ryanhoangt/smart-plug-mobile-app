@@ -30,6 +30,7 @@ function AuthStack() {
       screenOptions={
         {
           //
+          headerShown: false
         }
       }
     >
@@ -63,8 +64,8 @@ function AuthenticatedStack() {
 function Navigation() {
   return (
     <NavigationContainer>
-      {/* <AuthStack /> */}
-      <AuthenticatedStack />
+      <AuthStack />
+      {/* <AuthenticatedStack /> */}
     </NavigationContainer>
   );
 }
@@ -75,6 +76,7 @@ export default function App() {
     'open-sans-bold': require('./assets/fonts/OpenSans-Bold.ttf'),
     'be-vietnam': require('./assets/fonts/BeVietnamPro-Regular.ttf'),
     'epilogue-700': require('./assets/fonts/Epilogue-SemiBold-700.ttf'),
+    'Pacifico': require('./assets/fonts/Pacifico-Regular.ttf')
   });
 
   useEffect(() => {
