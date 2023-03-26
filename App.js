@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { useFonts } from 'expo-font';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -19,6 +19,7 @@ import ScenarioStack from './screens/ScenarioPage';
 import * as SplashScreen from 'expo-splash-screen';
 import { Image } from 'react-native';
 import { Colors } from './constants/colors';
+import AuthContextProvider, { AuthContext } from './store/auth-context';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -32,12 +33,10 @@ SplashScreen.preventAutoHideAsync()
 function AuthStack() {
   return (
     <Stack.Navigator
-      screenOptions={
-        {
-          //
-          headerShown: false
-        }
-      }
+      screenOptions={{
+        //
+        headerShown: false,
+      }}
     >
       <Stack.Screen name="Onboard" component={OnboardScreen} />
       <Stack.Screen name="Login" component={LoginScreen} />
@@ -117,10 +116,12 @@ function AuthenticatedStack() {
 
 // Navigation container
 function Navigation() {
+  const authCtx = useContext(AuthContext);
+
   return (
     <NavigationContainer>
-      <AuthStack />
-      {/* <AuthenticatedStack /> */}
+      {!authCtx.isAuthenticated && <AuthStack />}
+      {authCtx.isAuthenticated && <AuthenticatedStack />}
     </NavigationContainer>
   );
 }
@@ -131,7 +132,7 @@ export default function App() {
     'open-sans-bold': require('./assets/fonts/OpenSans-Bold.ttf'),
     'be-vietnam': require('./assets/fonts/BeVietnamPro-Regular.ttf'),
     'epilogue-700': require('./assets/fonts/Epilogue-SemiBold-700.ttf'),
-    'Pacifico': require('./assets/fonts/Pacifico-Regular.ttf')
+    Pacifico: require('./assets/fonts/Pacifico-Regular.ttf'),
   });
 
   useEffect(() => {
@@ -148,8 +149,9 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <StatusBar style="auto" />
-
-      <Navigation />
+      <AuthContextProvider>
+        <Navigation />
+      </AuthContextProvider>
     </SafeAreaProvider>
   );
 }

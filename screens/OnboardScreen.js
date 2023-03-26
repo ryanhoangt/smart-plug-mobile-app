@@ -1,12 +1,12 @@
-import { useNavigation } from "@react-navigation/native";
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import { useNavigation } from '@react-navigation/native';
+import { StatusBar } from 'expo-status-bar';
+import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 
 function OnboardScreen() {
   const navigation = useNavigation();
 
   const getStartedHandler = () => {
-    navigation.replace("Login");
+    navigation.replace('Login');
   };
 
   return (
@@ -16,7 +16,7 @@ function OnboardScreen() {
       <View style={styles.imageWrapper}>
         <Image
           style={styles.image}
-          source={require("../assets/images/on-board-illustrator.png")}
+          source={require('../assets/images/on-board-illustrator.png')}
         />
       </View>
       <View>
@@ -42,58 +42,58 @@ const styles = StyleSheet.create({
   smartplug: {
     marginTop: 50,
     fontSize: 50,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     color: 'rgba(126, 175, 213, 1)',
     marginBottom: 20,
-    alignItems: "center",
-    fontFamily: "Pacifico",
+    alignItems: 'center',
+    fontFamily: 'Pacifico',
   },
   label: {
     fontSize: 30,
-    fontWeight: "bold",
-    alignItems: "center",
+    fontWeight: 'bold',
+    alignItems: 'center',
     marginBottom: 10,
-    marginTop: 20
+    marginTop: 20,
   },
   getstartedButton: {
     height: 50,
-    width: "50%",
+    width: '50%',
     borderWidth: 0,
     borderRadius: 10,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     marginTop: 50,
-    backgroundColor: "rgba(250,100,0,1)",
+    backgroundColor: 'rgba(250,100,0,1)',
   },
   texat: {
     fontSize: 18,
-    color: "rgba(166, 166, 166, 1)",
-    alignSelf: "center",
-    justifyContent: "center",
-    alignItems: "center",
+    color: 'rgba(166, 166, 166, 1)',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   getstartedText: {
     fontSize: 20,
-    fontWeight: "bold",
-    color: "white",
+    fontWeight: 'bold',
+    color: 'white',
   },
   container: {
     flex: 1,
-    paddingTop: 80,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "flex",
+    // paddingTop: 80,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'flex',
   },
   imageWrapper: {
-    width: "100%",
+    width: '100%',
     height: 200,
-    justifyContent: "space-around",
+    justifyContent: 'space-around',
     marginBottom: 50,
   },
   image: {
-    width: "100%",
-    height: "100%",
-    resizeMode: "contain",
+    width: '100%',
+    height: '100%',
+    resizeMode: 'contain',
   },
 });
 

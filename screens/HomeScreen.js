@@ -1,14 +1,28 @@
 import { StatusBar } from 'expo-status-bar';
-import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
+import {
+  Image,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import FlatButton from '../components/UI/FlatButton';
 import DeviceController from '../components/Home/DeviceController';
 import { Colors } from '../constants/colors';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { AuthContext } from '../store/auth-context';
 
 const avatarPlaceholderImg = require('../assets/images/avatar-placeholder.jpg');
 
 function HomeScreen() {
+  function avatarPressHandler() {
+    // Logout for now
+    authCtx.onLogout();
+  }
+
+  const authCtx = useContext(AuthContext);
   const [timeString, setTimeString] = useState('');
 
   function getLiveTime() {
@@ -43,7 +57,9 @@ function HomeScreen() {
               Welcome, Hoang!
             </Text>
           </View>
-          <Image source={avatarPlaceholderImg} style={styles.avatarImg} />
+          <Pressable style={styles.avatarImg} onPress={avatarPressHandler}>
+            <Image source={avatarPlaceholderImg} style={styles.avatarImg} />
+          </Pressable>
         </View>
         <View style={styles.scenariosContainer}>
           <Text style={styles.sectionText}>Scenarios</Text>

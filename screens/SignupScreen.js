@@ -1,26 +1,59 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from 'react';
 import {
   View,
   Text,
   TextInput,
   TouchableOpacity,
   StyleSheet,
-} from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
+  Alert,
+} from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+import { createUser } from '../util/auth';
+import LoadingOverlay from '../components/UI/LoadingOverlay';
+import { AuthContext } from '../store/auth-context';
 
 const SignupScreen = () => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const navigation = useNavigation();
+  // HANDLERS
+  const getLoginHandler = () => {
+    navigation.replace('Login');
+  };
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
   };
-      const getLoginHandler = () => {
-        navigation.replace("Login");
-      };
+  const signupSubmitHandler = async () => {
+    if (!email.includes('@') || !(password.length >= 7) || !(name.length > 0)) {
+      return Alert.alert(
+        'Invalid input',
+        'Please check your entered information.'
+      );
+    }
+
+    setIsAuthenticating(true);
+    try {
+      const token = await createUser(email, password);
+      authCtx.onSuccessAuth(token);
+    } catch (err) {
+      Alert.alert(
+        'Authentication failed',
+        'Could not sign up. Please check your credentials or try again later.'
+      );
+      setIsAuthenticating(false);
+    }
+  };
+
+  // STATES
+  const navigation = useNavigation();
+  const authCtx = useContext(AuthContext);
+  const [showPassword, setShowPassword] = useState(false);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isAuthenticating, setIsAuthenticating] = useState(false);
+
+  if (isAuthenticating) {
+    return <LoadingOverlay message="Signing up..." />;
+  }
 
   return (
     <View style={styles.container}>
@@ -43,7 +76,7 @@ const SignupScreen = () => {
       <View style={styles.passwordContainer}>
         <TextInput
           style={[styles.passwordInput]}
-          placeholder="Enter your password"
+          placeholder="Enter your password (at least 7 characters)"
           value={password}
           onChangeText={setPassword}
           secureTextEntry={!showPassword}
@@ -53,13 +86,16 @@ const SignupScreen = () => {
           style={styles.passwordIconContainer}
         >
           <MaterialCommunityIcons
-            name={showPassword ? "eye-off" : "eye"}
+            name={showPassword ? 'eye-off' : 'eye'}
             size={24}
             color="grey"
           />
         </TouchableOpacity>
       </View>
-      <TouchableOpacity style={styles.signupButton}>
+      <TouchableOpacity
+        style={styles.signupButton}
+        onPress={signupSubmitHandler}
+      >
         <Text style={styles.signupButtonText}>Sign Up</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={getLoginHandler}>
@@ -72,26 +108,26 @@ const SignupScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "top",
-    alignItems: "center",
+    justifyContent: 'top',
+    alignItems: 'center',
     paddingHorizontal: 20,
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
   },
   title: {
     marginTop: 80,
     fontSize: 24,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginBottom: 30,
   },
   label: {
     fontSize: 18,
-    fontWeight: "bold",
-    alignSelf: "flex-start",
+    fontWeight: 'bold',
+    alignSelf: 'flex-start',
     marginBottom: 5,
   },
   input: {
     height: 50,
-    width: "100%",
+    width: '100%',
     borderWidth: 1,
     borderRadius: 10,
     paddingHorizontal: 10,
@@ -99,51 +135,51 @@ const styles = StyleSheet.create({
   },
   nameContainer: {
     height: 50,
-    width: "100%",
+    width: '100%',
     borderWidth: 1,
     borderRadius: 10,
     paddingHorizontal: 10,
     marginBottom: 10,
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   passwordContainer: {
     height: 50,
-    width: "100%",
+    width: '100%',
     borderWidth: 1,
     borderRadius: 10,
     paddingHorizontal: 10,
     marginBottom: 40,
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   passwordInput: {
     flex: 1,
   },
   passwordIconContainer: {
-    height: "100%",
+    height: '100%',
     aspectRatio: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   alreadyButtonText: {
     fontSize: 16,
-    color: "rgba(250,100,0,1)",
+    color: 'rgba(250,100,0,1)',
   },
   signupButton: {
     height: 50,
-    width: "100%",
+    width: '100%',
     borderWidth: 0,
     borderRadius: 20,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     marginBottom: 20,
-    backgroundColor: "#7EAFD5",
+    backgroundColor: '#7EAFD5',
   },
   signupButtonText: {
     fontSize: 16,
-    fontWeight: "bold",
-    color: "white",
+    fontWeight: 'bold',
+    color: 'white',
   },
 });
 export default SignupScreen;

@@ -1,21 +1,58 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-native';
+import React, { useContext, useState } from 'react';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation } from '@react-navigation/native';
+import { login } from '../util/auth';
+import LoadingOverlay from '../components/UI/LoadingOverlay';
+import { AuthContext } from '../store/auth-context';
 
 const LoginScreen = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const navigation = useNavigation();
-
+  // HANDLERS
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
   };
-    const getSignupHandler = () => {
-    navigation.replace("Signup");
+  const getSignupHandler = () => {
+    navigation.replace('Signup');
+  };
+  const loginSubmitHandler = async () => {
+    if (!email.includes('@') || !(password.length >= 7)) {
+      return Alert.alert(
+        'Invalid input',
+        'Please check your entered credentials.'
+      );
+    }
+
+    setIsAuthenticating(true);
+    try {
+      const token = await login(email, password);
+      authCtx.onSuccessAuth(token);
+    } catch (err) {
+      Alert.alert(
+        'Authentication failed',
+        'Could not login. Please check your credentials or try again later.'
+      );
+      setIsAuthenticating(false);
+    }
   };
 
+  // STATES
+  const navigation = useNavigation();
+  const authCtx = useContext(AuthContext);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [isAuthenticating, setIsAuthenticating] = useState(false);
+
+  if (isAuthenticating) {
+    return <LoadingOverlay message="Logging in..." />;
+  }
 
   return (
     <View style={styles.container}>
@@ -32,7 +69,7 @@ const LoginScreen = () => {
       <View style={styles.passwordContainer}>
         <TextInput
           style={[styles.passwordInput]}
-          placeholder="Enter your password"
+          placeholder="Enter your password (at least 7 characters)"
           value={password}
           onChangeText={setPassword}
           secureTextEntry={!showPassword}
@@ -42,7 +79,7 @@ const LoginScreen = () => {
           style={styles.passwordIconContainer}
         >
           <MaterialCommunityIcons
-            name={showPassword ? "eye-off" : "eye"}
+            name={showPassword ? 'eye-off' : 'eye'}
             size={24}
             color="grey"
           />
@@ -53,14 +90,13 @@ const LoginScreen = () => {
           <Text style={styles.forgotPassword}>Forgot Password?</Text>
         </TouchableOpacity>
       </View>
-      <TouchableOpacity style={styles.loginButton}>
+      <TouchableOpacity style={styles.loginButton} onPress={loginSubmitHandler}>
         <Text style={styles.loginButtonText}>Log in</Text>
       </TouchableOpacity>
 
       <TouchableOpacity onPress={getSignupHandler}>
         <Text style={styles.signupButtonText}>Not a member? Sign up now</Text>
       </TouchableOpacity>
-
     </View>
   );
 };
@@ -68,26 +104,26 @@ const LoginScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "top",
-    alignItems: "center",
+    justifyContent: 'top',
+    alignItems: 'center',
     paddingHorizontal: 30,
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
   },
   title: {
     marginTop: 80,
     fontSize: 24,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginBottom: 20,
   },
   label: {
     fontSize: 18,
-    fontWeight: "bold",
-    alignSelf: "flex-start",
+    fontWeight: 'bold',
+    alignSelf: 'flex-start',
     marginBottom: 5,
   },
   input: {
     height: 50,
-    width: "100%",
+    width: '100%',
     borderWidth: 1,
     borderRadius: 10,
     paddingHorizontal: 10,
@@ -95,51 +131,51 @@ const styles = StyleSheet.create({
   },
   passwordContainer: {
     height: 50,
-    width: "100%",
+    width: '100%',
     borderWidth: 1,
     borderRadius: 10,
     paddingHorizontal: 10,
     marginBottom: 10,
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   passwordInput: {
     flex: 1,
   },
   passwordIconContainer: {
-    height: "100%",
+    height: '100%',
     aspectRatio: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   daddy: {
-    alignSelf: "flex-start",
+    alignSelf: 'flex-start',
   },
   forgotPassword: {
     fontSize: 12,
-    fontWeight: "bold",
-    color: "grey",
+    fontWeight: 'bold',
+    color: 'grey',
     marginBottom: 30,
   },
 
   signupButtonText: {
     fontSize: 16,
-    color: 'rgba(250,100,0,1)'
+    color: 'rgba(250,100,0,1)',
   },
   loginButton: {
     height: 50,
-    width: "100%",
+    width: '100%',
     borderWidth: 0,
     borderRadius: 20,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     marginBottom: 20,
-    backgroundColor: "#7EAFD5"
+    backgroundColor: '#7EAFD5',
   },
   loginButtonText: {
     fontSize: 16,
-    fontWeight: "bold",
-    color: "white"
+    fontWeight: 'bold',
+    color: 'white',
   },
 });
 export default LoginScreen;
