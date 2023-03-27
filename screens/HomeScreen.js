@@ -13,6 +13,8 @@ import { Colors } from '../constants/colors';
 import { useContext, useEffect, useState } from 'react';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { AuthContext } from '../store/auth-context';
+import axios from 'axios';
+import { DEV_BACKEND_IP } from '@env';
 
 const avatarPlaceholderImg = require('../assets/images/avatar-placeholder.jpg');
 
@@ -44,6 +46,25 @@ function HomeScreen() {
 
   useEffect(() => {
     getLiveTime();
+
+    const testAuthBackend = async () => {
+      try {
+        const resp = await axios.get(
+          `http://${DEV_BACKEND_IP}:5000/test-firebase-auth-intg`,
+          {
+            headers: {
+              Authorization: `Bearer ${authCtx.token}`,
+            },
+          }
+        );
+
+        console.log(resp.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    testAuthBackend();
   }, []);
 
   return (

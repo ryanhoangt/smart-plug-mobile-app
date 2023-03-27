@@ -38,7 +38,7 @@ function StatisticScreen() {
               <Text style={styles.headText}>{headTxt}</Text>
             ))}
           />
-          <Rows data={tableData} textStyle={styles.tableText} />
+          <Rows data={tableData} />
         </Table>
       </View>
     </ScrollView>
