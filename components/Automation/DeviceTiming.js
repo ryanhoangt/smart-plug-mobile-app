@@ -3,7 +3,7 @@ import { Text, View, TextInput, StyleSheet } from 'react-native'
 
 function DeviceTiming({styleTitle}) {
     return (
-        <View style = {[styleTitle.container, styles.settingItem]}>
+        <View style = {[styleTitle.container, styles.settingItem, {paddingBottom:0}]}>
             <Text style = {styleTitle.title}>Time</Text>
             <View  style = {[styleTitle.settingBox, styleTitle.container]}>
                 <TextInput 

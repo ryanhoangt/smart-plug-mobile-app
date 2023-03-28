@@ -10,7 +10,8 @@ function DeviceSensor({sensorName}) {
       <Text>{sensorName}</Text>
       <SensorInputItem
         sensorType={"digital"}
-      ></SensorInputItem>
+      >
+      </SensorInputItem>
       <Pressable>
         <Feather name="trash-2" size={24} color="black" />
       </Pressable>
@@ -26,8 +27,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    
-    padding:10,
-    backgroundColor: "aqua"
+
+    margin:5,
+    padding:0,
+    // backgroundColor: "aqua"
+  }, sensorName:{
+
   }
 })
