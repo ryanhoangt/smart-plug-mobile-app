@@ -10,7 +10,7 @@ function DeviceSensor({sensorName, sensorType}) {
     <View style = {styles.sensorWrapper}>
       {/* name field */}
       <View style = {styles.sensorNameWrapper}>
-        <Text style = {styles.sensorName}>{sensorName}</Text>
+        <Text numberOfLines={1} style = {styles.sensorName}>{sensorName}</Text>
         <Icon name = "chevron-up-outline" style = {{flex: 1, color: "#72777A", fontSize: 14}}/>
       </View>
 
@@ -35,9 +35,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
 
     height: 40,
-    margin:5,
+    margin: 5,
     padding:0,
-    // backgroundColor: "aqua"
   }, 
 
   sensorNameWrapper:{
@@ -47,7 +46,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     backgroundColor: "#fff",
     height: "100%",
-    width: 156,
+    width: '40%',
+    maxWidth: 156,
 
     borderRadius: 6,
     shadowColor: "black", // add shadow - ios only
@@ -61,9 +61,9 @@ const styles = StyleSheet.create({
   
   sensorName:{
     fontFamily: "be-vietnam",
-    marginLeft: 5,
+    paddingLeft: 10,
     flex: 7,
-    color: "#72777A"
+    color: "#72777A",
   },
 
   deleteWrapper: {

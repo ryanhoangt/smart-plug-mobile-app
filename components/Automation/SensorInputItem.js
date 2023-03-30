@@ -39,10 +39,17 @@ export default SensorInputItem
 
 const styles = StyleSheet.create({
     inputWrapper:{
+        width: 120,
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
+    },
+
+    conditionBox:{
+        backgroundColor: "#fff",
+        padding:12,
+        borderRadius: 6,
         shadowColor: "black", // add shadow - ios only
         shadowOffset: {
             width: 0,
@@ -51,11 +58,17 @@ const styles = StyleSheet.create({
         shadowRadius: 6,
         shadowOpacity: 0.1,
     },
-
-    conditionBox:{
-        backgroundColor: "gray"
-    },
     conditionValueBox:{
-        backgroundColor: "gray"
+        backgroundColor: "#fff",
+        paddingVertical:12,
+        paddingHorizontal:30,
+        borderRadius: 6,
+        shadowColor: "black", // add shadow - ios only
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowRadius: 6,
+        shadowOpacity: 0.1,
     }
 })

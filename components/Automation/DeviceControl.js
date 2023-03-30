@@ -98,8 +98,8 @@ const styleDropDown = StyleSheet.create({
     dropdown: {
         display:"flex",
         flexDirection: "column",
-        paddingHorizontal: 12,
-        marginHorizontal: 10,
+        paddingHorizontal: 10,
+        // marginHorizontal: 3,
         marginVertical:0,
 
         // backgroundColor: "blue"
