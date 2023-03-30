@@ -1,10 +1,13 @@
+import { useContext, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { useFonts } from 'expo-font';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { AntDesign, Entypo } from '@expo/vector-icons';
 
+// SCREENS
 import OnboardScreen from './screens/OnboardScreen';
 import LoginScreen from './screens/LoginScreen';
 import SignupScreen from './screens/SignupScreen';
@@ -12,9 +15,6 @@ import HomeScreen from './screens/HomeScreen';
 import AutomationScreen from './screens/AutomationPage/AutomationScreen';
 import { ScenarioScreenOptions } from './screens/ScenarioPage/ScenarioScreen';
 import StatisticScreen from './screens/StatisticScreen';
-
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
 import ScenarioStack from './screens/ScenarioPage';
 import AutomationStack from './screens/AutomationPage/AutomationStack';
 import { AutomationScreenOptions } from './screens/AutomationPage/AutomationStack';
@@ -22,18 +22,27 @@ import { AutomationScreenOptions } from './screens/AutomationPage/AutomationStac
 SplashScreen.preventAutoHideAsync()
   .then((_) => {})
   .catch(console.warn);
+import * as SplashScreen from 'expo-splash-screen';
+import { Image } from 'react-native';
+import { Colors } from './constants/colors';
+import AuthContextProvider, { AuthContext } from './store/auth-context';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
+// Splash screen config
+SplashScreen.preventAutoHideAsync()
+  .then((_) => {})
+  .catch(console.warn);
+
+// Before-auth Stack
 function AuthStack() {
   return (
     <Stack.Navigator
-      screenOptions={
-        {
-          //
-        }
-      }
+      screenOptions={{
+        //
+        headerShown: false,
+      }}
     >
       <Stack.Screen name="Onboard" component={OnboardScreen} />
       <Stack.Screen name="Login" component={LoginScreen} />
@@ -42,12 +51,26 @@ function AuthStack() {
   );
 }
 
-// TODO: stack of screens after successfully authenticated
+// After-auth Stack
+const viewSensorIcon = require('./assets/icons/view-sensor-icon-64x64.png');
+const viewSensorIconOrange = require('./assets/icons/view-sensor-64x64-orange.png');
+const scenarioIcon = require('./assets/icons/scenario-icon-64x64.png');
+const scenarioIconOrange = require('./assets/icons/scenario-icon-64x64-orange.png');
 function AuthenticatedStack() {
   return (
     <Tab.Navigator>
       <Tab.Screen
-        options={{ headerShown: false }}
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ size, focused, color }) => (
+            <Entypo
+              name="home"
+              size={size}
+              color={focused ? Colors.orangePrimary : color}
+            />
+          ),
+          tabBarActiveTintColor: Colors.orangePrimary,
+        }}
         name="Home"
         component={HomeScreen}
       />
@@ -59,18 +82,43 @@ function AuthenticatedStack() {
       <Tab.Screen
         name="Scenario Stack"
         component={ScenarioStack}
-        options={ScenarioScreenOptions}
+        options={{
+          headerShown: false,
+          tabBarLabel: 'Scenario',
+          tabBarIcon: ({ focused, size }) => (
+            <Image
+              style={{ height: size, width: size }}
+              source={focused ? scenarioIconOrange : scenarioIcon}
+            />
+          ),
+          tabBarActiveTintColor: Colors.orangePrimary,
+        }}
       />
-      <Tab.Screen name="Statistic" component={StatisticScreen} />
+      <Tab.Screen
+        name="Sensors' Data"
+        component={StatisticScreen}
+        options={{
+          tabBarIcon: ({ focused, size }) => (
+            <Image
+              style={{ height: size, width: size }}
+              source={focused ? viewSensorIconOrange : viewSensorIcon}
+            />
+          ),
+          tabBarActiveTintColor: Colors.orangePrimary,
+        }}
+      />
     </Tab.Navigator>
   );
 }
 
+// Navigation container
 function Navigation() {
+  const authCtx = useContext(AuthContext);
+
   return (
     <NavigationContainer>
-      {/* <AuthStack /> */}
-      <AuthenticatedStack />
+      {!authCtx.isAuthenticated && <AuthStack />}
+      {authCtx.isAuthenticated && <AuthenticatedStack />}
     </NavigationContainer>
   );
 }
@@ -81,6 +129,7 @@ export default function App() {
     'open-sans-bold': require('./assets/fonts/OpenSans-Bold.ttf'),
     'be-vietnam': require('./assets/fonts/BeVietnamPro-Regular.ttf'),
     'epilogue-700': require('./assets/fonts/Epilogue-SemiBold-700.ttf'),
+    Pacifico: require('./assets/fonts/Pacifico-Regular.ttf'),
   });
 
   useEffect(() => {
@@ -97,8 +146,9 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <StatusBar style="auto" />
-
-      <Navigation />
+      <AuthContextProvider>
+        <Navigation />
+      </AuthContextProvider>
     </SafeAreaProvider>
   );
 }
