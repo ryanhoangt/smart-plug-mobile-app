@@ -6,20 +6,16 @@ import ScenarioButton from '../../components/UI/ScenarioButton';
 import Header from '../../components/UI/Header';
 import { defaultStyles } from '../../constants/defaultStyle';
 
-export const ScenarioScreenOptions = {
-  headerShown: false,
-  headerStyle: {
-    backgroundColor: Colors.background,
-  },
-};
-
-function ScenarioScreen({navigation}) {
+function ScenarioScreen({ navigation }) {
   function handleAddScenario() {
-    navigation.navigate("New Scenario")
+    navigation.navigate('New Scenario');
   }
 
   return (
-    <SafeAreaView style={defaultStyles.container} edges={["bottom", "left", "right"]}>
+    <SafeAreaView
+      style={defaultStyles.container}
+      edges={['bottom', 'left', 'right']}
+    >
       <StatusBar style="auto" />
       <ScrollView style={styles.scenarioList}>
         <ScenarioButton text="Go out" />
