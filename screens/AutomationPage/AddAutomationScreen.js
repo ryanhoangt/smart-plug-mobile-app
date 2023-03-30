@@ -10,7 +10,6 @@ function AddAutomationScreen() {
       <View style={styles.section}>
         <Text style={defaultStyles.sectionTitle}>Accessories</Text>
         <View>
-          <DeviceControl deviceName={"Shades"}></DeviceControl>
           <DeviceControl deviceName={"Light 1"}></DeviceControl>
           <DeviceControl deviceName={"Light 2"}></DeviceControl>
         </View>

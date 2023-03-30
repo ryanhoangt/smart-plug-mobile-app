@@ -1,5 +1,6 @@
 import { useState } from "react"
-import { TextInput, View } from "react-native"
+import { KeyboardAvoidingViewBase } from "react-native";
+import { TextInput, View, StyleSheet } from "react-native"
 import SensorSwitch from "../UI/SensorSwitch"
 
 function SensorInputItem({ sensorType }) {
@@ -8,15 +9,9 @@ function SensorInputItem({ sensorType }) {
 
     const renderAnalogInput = () => {
         return (
-            // <SensorSwitch
-            //     onPress={() => {
-            //         setIsActive(!isActive)
-            //     }}
-            //     isActive = {isActive}
-            // ></SensorSwitch>
-            <View>
-                <TextInput placeholder=">"></TextInput>
-                <TextInput placeholder="0"></TextInput>
+            <View style = {styles.inputWrapper}>
+                <TextInput placeholder=">" style = {styles.conditionBox}></TextInput>
+                <TextInput placeholder="0" style = {styles.conditionValueBox}></TextInput>
             </View>
         )
     }
@@ -24,6 +19,7 @@ function SensorInputItem({ sensorType }) {
     const renderDigitalInput = () => {
         return (
             <SensorSwitch
+                style = {styles.inputWrapper}
                 onPress={() => {
                     setIsActive(!isActive)
                 }}
@@ -40,3 +36,26 @@ function SensorInputItem({ sensorType }) {
 }
 
 export default SensorInputItem
+
+const styles = StyleSheet.create({
+    inputWrapper:{
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        shadowColor: "black", // add shadow - ios only
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowRadius: 6,
+        shadowOpacity: 0.1,
+    },
+
+    conditionBox:{
+        backgroundColor: "gray"
+    },
+    conditionValueBox:{
+        backgroundColor: "gray"
+    }
+})

@@ -26,9 +26,16 @@ function SensorSwitch({ onPress, isActive }) {
                 {/* // knob container */}
                 <MotiView
                     style={styles.knobContainer}
+                    from={{
+                        translateX: isActive ? size.width/4.25 : -(size.width/4.25)
+                    }}
+                    animate={{
+                        translateX: isActive ? -(size.width/4.25) : size.width/4.25 
+                    }}
+                    transition = {transition}
                 >
-                    {/* knob knobIndicator */}
-                    <MotiView style = {styles.knobIndicator}/>
+                    {/* knob knobIndicator*/}
+                    {/* <MotiView style = {styles.knobIndicator}/> */}
 
                 </MotiView>
 
@@ -51,7 +58,7 @@ const _trackColor = {
 }
 
 const size = {
-    width: 130,
+    width: 120,
     height: 40
 }
 
@@ -75,17 +82,17 @@ const styles = StyleSheet.create({
     },
     knobContainer: {
         width: size.width / 2,
-        height: size.height - 2,
+        height: size.height - 4,
         borderRadius: 6,
         backgroundColor: "white",
         alignItems: "center",
         justifyContent: "center",
         position: "absolute",
-        marginRight: 1,
+        // marginRight: 5,
         
     },
     knobIndicator: {
-        // backgroundColor: "pink",
+        backgroundColor: "pink",
         height: "100%",
         width:"100%",
 

@@ -25,9 +25,8 @@ function DeviceControl({ deviceName, onPress, label }) {
 
                         <Text style={[styleDropDown.title, styleDropDown.sensorTitle]}>Sensors</Text>
 
-                        <DeviceSensor sensorName={"Light sensor 1"}></DeviceSensor>
-                        {/* <DeviceSensor sensorName={"Distance sensor"}></DeviceSensor>
-                        <DeviceSensor sensorName={"L:ight sensor 2"}></DeviceSensor> */}
+                        <DeviceSensor sensorName={"Light sensor 1"} sensorType = {"digital"}></DeviceSensor>
+                        <DeviceSensor sensorName={"Distance sensor"} sensorType = {"analog"}></DeviceSensor>
                     </View>
                 </View>
             )
