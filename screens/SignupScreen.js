@@ -9,9 +9,9 @@ import {
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import { createUser } from '../util/auth';
 import LoadingOverlay from '../components/UI/LoadingOverlay';
 import { AuthContext } from '../store/auth-context';
+import { register } from '../services/auth.service';
 
 const SignupScreen = () => {
   // HANDLERS
@@ -31,7 +31,7 @@ const SignupScreen = () => {
 
     setIsAuthenticating(true);
     try {
-      const token = await createUser(email, password);
+      const token = await register(name, email, password);
       authCtx.onSuccessAuth(token);
     } catch (err) {
       Alert.alert(
