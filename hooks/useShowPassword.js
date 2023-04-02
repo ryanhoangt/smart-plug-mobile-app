@@ -1,3 +1,4 @@
+import { useState } from "react";
 function useShowPassword(initState = false) {
   const [passwordVisibility, setPWVisibility] = useState(initState);
 
@@ -8,4 +9,4 @@ function useShowPassword(initState = false) {
   return [passwordVisibility, togglePasswordVisibility];
 }
 
-export default {useShowPassword}
+export default useShowPassword
