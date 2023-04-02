@@ -38,5 +38,3 @@ export default function ScenarioStack() {
     </Stack.Navigator>
   );
 }
-
-const styles = StyleSheet.create({});

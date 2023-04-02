@@ -12,14 +12,12 @@ import { useNavigation } from '@react-navigation/native';
 import LoadingOverlay from '../components/UI/LoadingOverlay';
 import { AuthContext } from '../store/auth-context';
 import { register } from '../services/auth.service';
+import useShowPassword from '../hooks/useShowPassword';
 
 const SignupScreen = () => {
   // HANDLERS
   const getLoginHandler = () => {
     navigation.replace('Login');
-  };
-  const handleShowPassword = () => {
-    setShowPassword(!showPassword);
   };
   const signupSubmitHandler = async () => {
     if (!email.includes('@') || !(password.length >= 7) || !(name.length > 0)) {
@@ -45,7 +43,7 @@ const SignupScreen = () => {
   // STATES
   const navigation = useNavigation();
   const authCtx = useContext(AuthContext);
-  const [showPassword, setShowPassword] = useState(false);
+  const [passwordVisibility, togglePasswordVisibility] = useShowPassword();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -79,14 +77,14 @@ const SignupScreen = () => {
           placeholder="Enter your password (at least 7 characters)"
           value={password}
           onChangeText={setPassword}
-          secureTextEntry={!showPassword}
+          secureTextEntry={!passwordVisibility}
         />
         <TouchableOpacity
-          onPress={handleShowPassword}
+          onPress={togglePasswordVisibility}
           style={styles.passwordIconContainer}
         >
           <MaterialCommunityIcons
-            name={showPassword ? 'eye-off' : 'eye'}
+            name={passwordVisibility ? 'eye-off' : 'eye'}
             size={24}
             color="grey"
           />
