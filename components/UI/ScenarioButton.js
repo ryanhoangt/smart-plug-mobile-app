@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
     // margin: 8,
     marginVertical: 6,
     paddingVertical: 12,
-    borderRadius: 6,
+    borderRadius: 20,
     elevation: 2, // add shadow - android only
     shadowColor: 'black', // add shadow - ios only
     shadowOffset: {

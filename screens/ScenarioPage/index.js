@@ -29,7 +29,7 @@ const NewScenarioOptions = {
 export default function ScenarioStack() {
   return (
     <Stack.Navigator screenOptions={ScenarioStackOptions}>
-      <Stack.Screen name="Scenario" component={ScenarioScreen} />
+      <Stack.Screen name="All Scenarios" component={ScenarioScreen} />
       <Stack.Screen
         options={NewScenarioOptions}
         name="New Scenario"

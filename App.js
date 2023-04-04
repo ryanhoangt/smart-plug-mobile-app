@@ -1,4 +1,5 @@
 import { useContext, useEffect } from 'react';
+import './ignoreWarnings';
 import { StatusBar } from 'expo-status-bar';
 import { useFonts } from 'expo-font';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -87,7 +88,7 @@ function AuthenticatedStack() {
         component={ScenarioStack}
         options={{
           headerShown: false,
-          tabBarLabel: 'Scenario',
+          tabBarLabel: 'Scenarios',
           tabBarIcon: ({ focused, size }) => (
             <Image
               style={{ height: size, width: size }}

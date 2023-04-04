@@ -5,6 +5,7 @@ import { Colors } from '../../constants/colors';
 import ScenarioButton from '../../components/UI/ScenarioButton';
 import Header from '../../components/UI/Header';
 import { defaultStyles } from '../../constants/defaultStyle';
+import AddNewButton from '../../components/UI/AddNewButton';
 
 function ScenarioScreen({ navigation }) {
   function handleAddScenario() {
@@ -21,14 +22,7 @@ function ScenarioScreen({ navigation }) {
         <ScenarioButton text="Go out" />
         <ScenarioButton text="Morning" />
         <ScenarioButton text="Evening" />
-        <View style={styles.addBtn}>
-          <Button
-            onPress={handleAddScenario}
-            color={Colors.grayPrimary}
-            title="+ Add new scenario"
-            accessibilityLabel="Add new scenario"
-          />
-        </View>
+        <AddNewButton onBtnPress={handleAddScenario} />
       </ScrollView>
     </SafeAreaView>
   );
@@ -38,17 +32,7 @@ const styles = StyleSheet.create({
   scenarioList: {
     // marginTop: 12,
     // backgroundColor: "red",
-    // flex: 1
-  },
-  addBtn: {
-    marginTop: 6,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 2,
-    borderStyle: 'dotted',
-    borderColor: Colors.grayPrimary,
-    borderRadius: 6,
+    // flex: 1,
   },
 });
 
