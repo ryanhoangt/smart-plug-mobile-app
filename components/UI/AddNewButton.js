@@ -1,13 +1,13 @@
 import { Button, StyleSheet, View } from 'react-native';
 import { Colors } from '../../constants/colors';
 
-function AddNewButton({ onBtnPress, style }) {
+function AddNewButton({ onBtnPress, style, btnText }) {
   return (
     <View style={[styles.addBtn, style]}>
       <Button
         onPress={onBtnPress}
-        title="+ Add new scenario"
-        accessibilityLabel="Add new scenario"
+        title={`+ ${btnText}`}
+        accessibilityLabel={btnText}
         color={Colors.orangePrimary}
       />
     </View>

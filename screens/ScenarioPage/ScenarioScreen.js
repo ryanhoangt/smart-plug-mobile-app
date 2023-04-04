@@ -22,7 +22,10 @@ function ScenarioScreen({ navigation }) {
         <ScenarioButton text="Go out" />
         <ScenarioButton text="Morning" />
         <ScenarioButton text="Evening" />
-        <AddNewButton onBtnPress={handleAddScenario} />
+        <AddNewButton
+          onBtnPress={handleAddScenario}
+          btnText="Add New Scenario"
+        />
       </ScrollView>
     </SafeAreaView>
   );

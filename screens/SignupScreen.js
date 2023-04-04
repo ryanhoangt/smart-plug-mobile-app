@@ -32,6 +32,7 @@ const SignupScreen = () => {
       const token = await register(name, email, password);
       authCtx.onSuccessAuth(token);
     } catch (err) {
+      console.log(err);
       Alert.alert(
         'Authentication failed',
         'Could not sign up. Please check your credentials or try again later.'

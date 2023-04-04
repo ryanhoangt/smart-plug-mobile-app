@@ -6,41 +6,42 @@ import ScenarioButton from '../../components/UI/ScenarioButton';
 import Header from '../../components/UI/Header';
 import { defaultStyles } from '../../constants/defaultStyle';
 import { useState } from 'react';
-
+import AddNewButton from '../../components/UI/AddNewButton';
 
 function AutomationScreen({ navigation }) {
   // var [count, setCount] = useState(0);
 
   function handleAddAutomation() {
-    navigation.navigate("New Automation")
+    navigation.navigate('New Automation');
   }
 
   function onPress() {
     // setCount(count+1)
-    navigation.navigate("Detail Automation")
+    navigation.navigate('Detail Automation');
   }
 
   return (
-    <SafeAreaView style={defaultStyles.container} edges={["bottom", "left", "right"]}>
+    <SafeAreaView
+      style={defaultStyles.container}
+      edges={['bottom', 'left', 'right']}
+    >
       <StatusBar style="auto" />
       <ScrollView style={styles.scenarioList}>
-        <ScenarioButton
-          onPress={onPress}
-          text="Living Room" />
-        <ScenarioButton
-          onPress={onPress}
-          text="Automation 1" />
-        <ScenarioButton
-          onPress={onPress}
-          text="Automation 2" />
-        <View style={styles.addBtn}>
+        <ScenarioButton onPress={onPress} text="Living Room" />
+        <ScenarioButton onPress={onPress} text="Automation 1" />
+        <ScenarioButton onPress={onPress} text="Automation 2" />
+        <AddNewButton
+          btnText="Add New Automation"
+          onBtnPress={handleAddAutomation}
+        />
+        {/* <View style={styles.addBtn}>
           <Button
             onPress={handleAddAutomation}
             color={Colors.grayPrimary}
             title="+ Add new Automation"
             accessibilityLabel="Add new Automation"
           />
-        </View>
+        </View> */}
         {/* <Text>Count: {count}</Text> */}
       </ScrollView>
     </SafeAreaView>

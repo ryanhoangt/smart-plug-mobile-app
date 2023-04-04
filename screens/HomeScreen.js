@@ -117,6 +117,7 @@ function HomeScreen() {
               marginBottom: 20,
             }}
             onBtnPress={addNewDeviceHandler}
+            btnText="Add New Device"
           />
           {/* <View> */}
           <DeviceController deviceName="Air Conditioner" />
