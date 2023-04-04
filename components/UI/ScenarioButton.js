@@ -3,9 +3,9 @@ import FlatButton from './FlatButton';
 import React from 'react';
 import { Colors } from '../../constants/colors';
 
-function ScenarioButton({ text }) {
+function ScenarioButton({ text, onPress }) {
   return (
-    <FlatButton style={styles.scenarioBtn} textAlign="left">
+    <FlatButton style={styles.scenarioBtn} textAlign="left" onPress={onPress}>
       {text}
     </FlatButton>
   );

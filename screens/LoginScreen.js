@@ -9,15 +9,12 @@ import {
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import { login } from '../util/auth';
 import LoadingOverlay from '../components/UI/LoadingOverlay';
 import { AuthContext } from '../store/auth-context';
+import { login } from '../services/auth.service';
+import useShowPassword from '../hooks/useShowPassword';
 
 const LoginScreen = () => {
-  // HANDLERS
-  const handleShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
   const getSignupHandler = () => {
     navigation.replace('Signup');
   };
@@ -47,7 +44,7 @@ const LoginScreen = () => {
   const authCtx = useContext(AuthContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
+  const [passwordVisibility, togglePasswordVisibility] = useShowPassword();
   const [isAuthenticating, setIsAuthenticating] = useState(false);
 
   if (isAuthenticating) {
@@ -72,14 +69,14 @@ const LoginScreen = () => {
           placeholder="Enter your password (at least 7 characters)"
           value={password}
           onChangeText={setPassword}
-          secureTextEntry={!showPassword}
+          secureTextEntry={!passwordVisibility}
         />
         <TouchableOpacity
-          onPress={handleShowPassword}
+          onPress={togglePasswordVisibility}
           style={styles.passwordIconContainer}
         >
           <MaterialCommunityIcons
-            name={showPassword ? 'eye-off' : 'eye'}
+            name={passwordVisibility ? 'eye-off' : 'eye'}
             size={24}
             color="grey"
           />
