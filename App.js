@@ -12,10 +12,16 @@ import OnboardScreen from './screens/OnboardScreen';
 import LoginScreen from './screens/LoginScreen';
 import SignupScreen from './screens/SignupScreen';
 import HomeScreen from './screens/HomeScreen';
-import AutomationScreen from './screens/AutomationScreen';
+import AutomationScreen from './screens/AutomationPage/AutomationScreen';
 import { ScenarioScreenOptions } from './screens/ScenarioPage/ScenarioScreen';
 import StatisticScreen from './screens/StatisticScreen';
 import ScenarioStack from './screens/ScenarioPage';
+import AutomationStack from './screens/AutomationPage/AutomationStack';
+import { AutomationScreenOptions } from './screens/AutomationPage/AutomationStack';
+
+SplashScreen.preventAutoHideAsync()
+  .then((_) => {})
+  .catch(console.warn);
 import * as SplashScreen from 'expo-splash-screen';
 import { Image } from 'react-native';
 import { Colors } from './constants/colors';
@@ -68,19 +74,10 @@ function AuthenticatedStack() {
         name="Home"
         component={HomeScreen}
       />
-      <Tab.Screen
-        name="Automation"
-        component={AutomationScreen}
-        options={{
-          tabBarIcon: ({ focused, color, size }) => (
-            <AntDesign
-              name="clockcircle"
-              size={size}
-              color={focused ? Colors.orangePrimary : color}
-            />
-          ),
-          tabBarActiveTintColor: Colors.orangePrimary,
-        }}
+      <Tab.Screen 
+        name="Automation Stack" 
+        component={AutomationStack} 
+        options={AutomationScreenOptions}  
       />
       <Tab.Screen
         name="Scenario Stack"
