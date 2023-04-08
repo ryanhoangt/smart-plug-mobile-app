@@ -1,7 +1,8 @@
 export default class Sensor {
-  constructor(name, type, value, isOnline) {
+  constructor(_id, name, type_sensor, value, isOnline = true) {
+    this._id = _id;
     this.name = name;
-    this.type = type;
+    this.type_sensor = type_sensor;
     this.value = value;
     this.isOnline = isOnline;
   }

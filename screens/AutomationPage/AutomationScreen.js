@@ -5,11 +5,41 @@ import { Colors } from '../../constants/colors';
 import ScenarioButton from '../../components/UI/ScenarioButton';
 import Header from '../../components/UI/Header';
 import { defaultStyles } from '../../constants/defaultStyle';
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import AddNewButton from '../../components/UI/AddNewButton';
+import { BACKEND_HOST } from '@env';
+import { UserDataContext } from '../../store/user-data-context';
+import axios from 'axios';
+import LoadingOverlay from '../../components/UI/LoadingOverlay';
+import Automation from '../../model/automation';
 
 function AutomationScreen({ navigation }) {
   // var [count, setCount] = useState(0);
+
+  const userDataCtx = useContext(UserDataContext);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const fetchAutomations = async () => {
+    try {
+      const automationsUrl =
+        BACKEND_HOST + `/users/${userDataCtx.id}/automations`;
+      const { data } = await axios.get(automationsUrl);
+
+      const autosArr = data.metadata.automations.map(
+        (autom) => new Automation(autom._id, autom.name)
+      );
+      userDataCtx.updateAllAutomations(autosArr);
+    } catch (err) {
+      // TODO: handle error...
+      console.log(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchAutomations();
+  }, []);
 
   function handleAddAutomation() {
     navigation.navigate('New Automation');
@@ -20,6 +50,10 @@ function AutomationScreen({ navigation }) {
     navigation.navigate('Detail Automation');
   }
 
+  if (isLoading) {
+    return <LoadingOverlay message="Loading..." />;
+  }
+
   return (
     <SafeAreaView
       style={defaultStyles.container}
@@ -27,9 +61,15 @@ function AutomationScreen({ navigation }) {
     >
       <StatusBar style="auto" />
       <ScrollView style={styles.scenarioList}>
-        <ScenarioButton onPress={onPress} text="Living Room" />
-        <ScenarioButton onPress={onPress} text="Automation 1" />
-        <ScenarioButton onPress={onPress} text="Automation 2" />
+        {userDataCtx.allAutomations.map((autoObj) => {
+          return (
+            <ScenarioButton
+              onPress={onPress}
+              text={autoObj.name}
+              key={autoObj._id}
+            />
+          );
+        })}
         <AddNewButton
           btnText="Add New Automation"
           onBtnPress={handleAddAutomation}

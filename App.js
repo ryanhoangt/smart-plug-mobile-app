@@ -27,6 +27,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { Image } from 'react-native';
 import { Colors } from './constants/colors';
 import AuthContextProvider, { AuthContext } from './store/auth-context';
+import UserDataContextProvider from './store/user-data-context';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -75,10 +76,10 @@ function AuthenticatedStack() {
         name="Home"
         component={HomeScreen}
       />
-      <Tab.Screen 
-        name="Automation Stack" 
-        component={AutomationStack} 
-        options={AutomationScreenOptions}  
+      <Tab.Screen
+        name="Automation Stack"
+        component={AutomationStack}
+        options={AutomationScreenOptions}
       />
       <Tab.Screen
         name="Scenario Stack"
@@ -148,7 +149,9 @@ export default function App() {
     <SafeAreaProvider>
       <StatusBar style="auto" />
       <AuthContextProvider>
-        <Navigation />
+        <UserDataContextProvider>
+          <Navigation />
+        </UserDataContextProvider>
       </AuthContextProvider>
     </SafeAreaProvider>
   );

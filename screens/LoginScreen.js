@@ -13,6 +13,7 @@ import LoadingOverlay from '../components/UI/LoadingOverlay';
 import { AuthContext } from '../store/auth-context';
 import { login } from '../services/auth.service';
 import useShowPassword from '../hooks/useShowPassword';
+import { UserDataContext } from '../store/user-data-context';
 
 const LoginScreen = () => {
   const getSignupHandler = () => {
@@ -28,8 +29,9 @@ const LoginScreen = () => {
 
     setIsAuthenticating(true);
     try {
-      const token = await login(email, password);
+      const { id, token, name } = await login(email, password);
       authCtx.onSuccessAuth(token);
+      userDataCtx.onSuccessAuth(id, name);
     } catch (err) {
       Alert.alert(
         'Authentication failed',
@@ -42,6 +44,7 @@ const LoginScreen = () => {
   // STATES
   const navigation = useNavigation();
   const authCtx = useContext(AuthContext);
+  const userDataCtx = useContext(UserDataContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordVisibility, togglePasswordVisibility] = useShowPassword();

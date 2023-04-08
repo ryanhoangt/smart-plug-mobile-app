@@ -15,10 +15,14 @@ import { useContext, useEffect, useRef, useState } from 'react';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { AuthContext } from '../store/auth-context';
 import axios from 'axios';
-import { DEV_BACKEND_IP } from '@env';
+import { BACKEND_HOST } from '@env';
 import AddNewButton from '../components/UI/AddNewButton';
 import AddDeviceForm from '../components/Home/AddDeviceForm';
 import { NativeBaseProvider } from 'native-base';
+import { UserDataContext } from '../store/user-data-context';
+import Device from '../model/device';
+import LoadingOverlay from '../components/UI/LoadingOverlay';
+import Scenario from '../model/scenario';
 
 const avatarPlaceholderImg = require('../assets/images/avatar-placeholder.jpg');
 
@@ -40,44 +44,60 @@ function HomeScreen() {
     setTimeout(getLiveTime, 1000); // Update every second
   }
 
+  const fetchDevicesAndScenarios = async () => {
+    try {
+      // fetch all devices and store
+      const devicesUrl = BACKEND_HOST + `/users/${userDataCtx.id}/devices`;
+      const { data: devicesData } = await axios.get(devicesUrl);
+
+      const devicesArr = devicesData.metadata.devices.map(
+        (device) => new Device(device._id, device.name, device.state)
+      );
+      userDataCtx.updateAllDevices(devicesArr);
+
+      // fetch all scenarios without actions and store
+      const scenariosUrl = BACKEND_HOST + `/users/${userDataCtx.id}/scenarios`;
+      const { data: scerariosData } = await axios.get(scenariosUrl);
+
+      const scenariosArr = scerariosData.metadata.scenarios.map(
+        (scenario) => new Scenario(scenario._id, scenario.name)
+      );
+      userDataCtx.updateAllScenarios(scenariosArr);
+    } catch (err) {
+      // TODO: handle error, retry..., user scroll..
+      console.log(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   // HANDLERS
   function addNewDeviceHandler() {
-    // TODO: show a form sliding up
     sheetRef.current.snapTo(0);
   }
 
   function avatarPressHandler() {
     // Logout for now
     authCtx.onLogout();
+    userDataCtx.onLogout();
   }
 
   // CONTEXTS, STATES, REFS
   const authCtx = useContext(AuthContext);
+  const userDataCtx = useContext(UserDataContext);
   const [timeString, setTimeString] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
   const sheetRef = useRef(null);
 
   useEffect(() => {
     getLiveTime();
 
-    const testAuthBackend = async () => {
-      try {
-        const resp = await axios.get(
-          `http://${DEV_BACKEND_IP}:5000/test-firebase-auth-intg`,
-          {
-            headers: {
-              Authorization: `Bearer ${authCtx.token}`,
-            },
-          }
-        );
-
-        console.log(resp.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
-    testAuthBackend();
+    fetchDevicesAndScenarios();
   }, []);
+
+  if (isLoading) {
+    return <LoadingOverlay message="Loading..." />;
+  }
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -87,7 +107,7 @@ function HomeScreen() {
           <View style={styles.headingTextContainer}>
             <Text style={{ color: '#9BA4B0' }}>{timeString}</Text>
             <Text style={[styles.welcomeText, { fontWeight: 800 }]}>
-              Welcome, Hoang!
+              Welcome, {userDataCtx.name}!
             </Text>
           </View>
           <Pressable style={styles.avatarImg} onPress={avatarPressHandler}>
@@ -96,12 +116,18 @@ function HomeScreen() {
         </View>
         <View style={styles.scenariosContainer}>
           <Text style={styles.sectionText}>Favorite Scenarios</Text>
-          <FlatButton fontSize={20} textAlign="left" style={styles.scenarioBtn}>
-            Go out
-          </FlatButton>
-          <FlatButton fontSize={20} textAlign="left" style={styles.scenarioBtn}>
-            Morning
-          </FlatButton>
+          {userDataCtx.allScenarios.map((scenarioObj) => {
+            return (
+              <FlatButton
+                fontSize={20}
+                textAlign="left"
+                style={styles.scenarioBtn}
+                key={scenarioObj._id}
+              >
+                {scenarioObj.name}
+              </FlatButton>
+            );
+          })}
         </View>
         <View style={styles.devicesContainer}>
           <Text style={styles.sectionText}>Devices</Text>
@@ -120,9 +146,15 @@ function HomeScreen() {
             btnText="Add New Device"
           />
           {/* <View> */}
-          <DeviceController deviceName="Air Conditioner" />
-          <DeviceController deviceName="Room Lights" />
-          <DeviceController deviceName="Speakers" />
+          {userDataCtx.allDevices
+            ? userDataCtx.allDevices.map((deviceObj) => (
+                <DeviceController
+                  deviceName={deviceObj.name}
+                  key={deviceObj._id}
+                />
+              ))
+            : ''}
+
           {/* </View> */}
         </View>
       </ScrollView>

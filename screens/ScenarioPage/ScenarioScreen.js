@@ -6,11 +6,19 @@ import ScenarioButton from '../../components/UI/ScenarioButton';
 import Header from '../../components/UI/Header';
 import { defaultStyles } from '../../constants/defaultStyle';
 import AddNewButton from '../../components/UI/AddNewButton';
+import { useContext, useState } from 'react';
+import LoadingOverlay from '../../components/UI/LoadingOverlay';
+import { UserDataContext } from '../../store/user-data-context';
 
 function ScenarioScreen({ navigation }) {
   function handleAddScenario() {
     navigation.navigate('New Scenario');
   }
+
+  const userDataCtx = useContext(UserDataContext);
+  const [isLoading, setIsLoading] = useState(false); // TODO: for future if user reload
+
+  if (isLoading) return <LoadingOverlay message="Loading..." />;
 
   return (
     <SafeAreaView
@@ -19,9 +27,11 @@ function ScenarioScreen({ navigation }) {
     >
       <StatusBar style="auto" />
       <ScrollView style={styles.scenarioList}>
-        <ScenarioButton text="Go out" />
-        <ScenarioButton text="Morning" />
-        <ScenarioButton text="Evening" />
+        {userDataCtx.allScenarios.map((scenarioObj) => {
+          return (
+            <ScenarioButton text={scenarioObj.name} key={scenarioObj._id} />
+          );
+        })}
         <AddNewButton
           onBtnPress={handleAddScenario}
           btnText="Add New Scenario"

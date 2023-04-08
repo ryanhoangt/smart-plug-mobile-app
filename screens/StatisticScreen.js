@@ -1,27 +1,60 @@
 import { StatusBar } from 'expo-status-bar';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Row, Rows, Table } from 'react-native-table-component';
 import { Colors } from '../constants/colors';
 import { SENSORS } from '../data/sensors-data';
+import { UserDataContext } from '../store/user-data-context';
+import { BACKEND_HOST } from '@env';
+import axios from 'axios';
+import Sensor from '../model/sensor';
+import LoadingOverlay from '../components/UI/LoadingOverlay';
 
 function StatisticScreen() {
+  const fetchSensorsAndInitialize = async () => {
+    try {
+      const sensorsUrl = BACKEND_HOST + `/users/${userDataCtx.id}/sensors`;
+      const { data } = await axios.get(sensorsUrl);
+
+      const sensorsArr = data.metadata.sensors.map(
+        (sensor) =>
+          new Sensor(sensor._id, sensor.name, sensor.type_sensor, sensor.value)
+      );
+      userDataCtx.updateAllSensors(sensorsArr);
+
+      setTableData(
+        userDataCtx.allSensors.map((sensorObj) => [
+          <Text style={styles.nameCell}>{sensorObj.name}</Text>,
+          <Text style={styles.typeCell}>{sensorObj.type_sensor}</Text>,
+          <Text
+            style={
+              sensorObj.isOnline ? styles.valueCellOnl : styles.valueCellOff
+            }
+          >
+            {sensorObj.isOnline ? sensorObj.value : 'Offline'}
+          </Text>,
+        ])
+      );
+    } catch (err) {
+      // TODO: error handling, retry...
+      setTableData([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const userDataCtx = useContext(UserDataContext);
   const headData = ['Name', 'Type', 'Value'];
   const [tableData, setTableData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    setTableData(
-      SENSORS.map((sensor) => [
-        <Text style={styles.nameCell}>{sensor.name}</Text>,
-        <Text style={styles.typeCell}>{sensor.type}</Text>,
-        <Text
-          style={sensor.isOnline ? styles.valueCellOnl : styles.valueCellOff}
-        >
-          {sensor.isOnline ? sensor.value : 'Offline'}
-        </Text>,
-      ])
-    );
+    fetchSensorsAndInitialize();
   }, []);
+
+  if (isLoading) {
+    return <LoadingOverlay message="Loading..." />;
+  }
 
   return (
     <ScrollView style={styles.container}>

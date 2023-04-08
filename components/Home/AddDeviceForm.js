@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Container, Form, Item, Picker, Label, Input } from 'native-base';
+import { Colors } from '../../constants/colors';
 
 export default class AddDeviceForm extends Component {
   constructor(props) {
@@ -31,11 +32,13 @@ export default class AddDeviceForm extends Component {
       <Container>
         <Form
           style={{
-            backgroundColor: 'papayawhip',
+            backgroundColor: Colors.greenPrimary,
             padding: 16,
             height: 450,
-            margin: 20,
-            borderRadius: 50,
+            margin: 10,
+            borderRadius: 40,
+            borderWidth: 4,
+            borderStyle: 'dashed',
           }}
         >
           <Item floatingLabel style={{ margin: 10, padding: 16 }}>
@@ -43,6 +46,7 @@ export default class AddDeviceForm extends Component {
               style={{
                 fontSize: 18,
                 fontFamily: 'open-sans-bold',
+                color: 'black',
               }}
             >
               Device's name:
@@ -58,6 +62,7 @@ export default class AddDeviceForm extends Component {
               style={{
                 fontSize: 18,
                 fontFamily: 'open-sans-bold',
+                color: 'black',
               }}
             >
               Microbit's pin number:
@@ -72,6 +77,7 @@ export default class AddDeviceForm extends Component {
               style={{
                 fontSize: 18,
                 fontFamily: 'open-sans-bold',
+                color: 'black',
                 width: '100%',
               }}
             >

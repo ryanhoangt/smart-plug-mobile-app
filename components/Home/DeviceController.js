@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { StyleSheet, Switch, Text, View } from "react-native";
+import { useState } from 'react';
+import { StyleSheet, Switch, Text, View } from 'react-native';
 
-import { Colors } from "../../constants/colors";
+import { Colors } from '../../constants/colors';
 
 function DeviceController({ deviceName }) {
   const [isOn, setIsOn] = useState(false);
@@ -16,7 +16,7 @@ function DeviceController({ deviceName }) {
     <View style={styles.deviceContainer}>
       <Text style={styles.deviceNameText}>{deviceName}</Text>
       <View style={styles.toggleContainer}>
-        <Text style={styles.toggleText}>{isOn ? "On" : "Off"}</Text>
+        <Text style={styles.toggleText}>{isOn ? 'On' : 'Off'}</Text>
         <Switch
           onValueChange={toggleSwitch}
           value={isOn}
@@ -31,12 +31,12 @@ export default DeviceController;
 
 const styles = StyleSheet.create({
   deviceContainer: {
-    backgroundColor: "white",
-    width: "48%",
+    backgroundColor: 'white',
+    width: '48%',
     borderRadius: 12,
     padding: 8,
     elevation: 4, // add shadow - android only
-    shadowColor: "black", // add shadow - ios only
+    shadowColor: 'black', // add shadow - ios only
     shadowOffset: {
       width: 0,
       height: 2,
@@ -45,17 +45,17 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
   },
   toggleContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     marginTop: 10,
   },
   deviceNameText: {
-    fontFamily: "be-vietnam",
-    color: "rgba(30, 41, 51, 1)",
+    fontFamily: 'be-vietnam',
+    color: 'rgba(30, 41, 51, 1)',
     fontSize: 18,
   },
   toggleText: {
-    color: "#798794",
+    color: '#798794',
   },
 });
