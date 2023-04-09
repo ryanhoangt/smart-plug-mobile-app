@@ -23,6 +23,7 @@ import { UserDataContext } from '../store/user-data-context';
 import Device from '../model/device';
 import LoadingOverlay from '../components/UI/LoadingOverlay';
 import Scenario from '../model/scenario';
+import { getAllDevices, getAllScenarios } from '../services/user-data.service';
 
 const avatarPlaceholderImg = require('../assets/images/avatar-placeholder.jpg');
 
@@ -45,23 +46,15 @@ function HomeScreen() {
   }
 
   const fetchDevicesAndScenarios = async () => {
+    setIsLoading(true);
+
     try {
       // fetch all devices and store
-      const devicesUrl = BACKEND_HOST + `/users/${userDataCtx.id}/devices`;
-      const { data: devicesData } = await axios.get(devicesUrl);
-
-      const devicesArr = devicesData.metadata.devices.map(
-        (device) => new Device(device._id, device.name, device.state)
-      );
+      const devicesArr = await getAllDevices(userDataCtx.id);
       userDataCtx.updateAllDevices(devicesArr);
 
       // fetch all scenarios without actions and store
-      const scenariosUrl = BACKEND_HOST + `/users/${userDataCtx.id}/scenarios`;
-      const { data: scerariosData } = await axios.get(scenariosUrl);
-
-      const scenariosArr = scerariosData.metadata.scenarios.map(
-        (scenario) => new Scenario(scenario._id, scenario.name)
-      );
+      const scenariosArr = await getAllScenarios(userDataCtx.id);
       userDataCtx.updateAllScenarios(scenariosArr);
     } catch (err) {
       // TODO: handle error, retry..., user scroll..
@@ -80,6 +73,13 @@ function HomeScreen() {
     // Logout for now
     authCtx.onLogout();
     userDataCtx.onLogout();
+  }
+
+  function onScrollHandler(event) {
+    const scrollY = event.nativeEvent.contentOffset.y;
+    if (scrollY < -12) {
+      fetchDevicesAndScenarios();
+    }
   }
 
   // CONTEXTS, STATES, REFS
@@ -101,7 +101,11 @@ function HomeScreen() {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <ScrollView style={styles.homeContainer}>
+      <ScrollView
+        style={styles.homeContainer}
+        onScroll={onScrollHandler}
+        scrollEventThrottle={500}
+      >
         <StatusBar style="auto" />
         <View style={styles.welcomeHeading}>
           <View style={styles.headingTextContainer}>
@@ -116,18 +120,20 @@ function HomeScreen() {
         </View>
         <View style={styles.scenariosContainer}>
           <Text style={styles.sectionText}>Favorite Scenarios</Text>
-          {userDataCtx.allScenarios.map((scenarioObj) => {
-            return (
-              <FlatButton
-                fontSize={20}
-                textAlign="left"
-                style={styles.scenarioBtn}
-                key={scenarioObj._id}
-              >
-                {scenarioObj.name}
-              </FlatButton>
-            );
-          })}
+          {userDataCtx.allScenarios
+            .filter((obj) => obj.isFavorite === true)
+            .map((scenarioObj) => {
+              return (
+                <FlatButton
+                  fontSize={20}
+                  textAlign="left"
+                  style={styles.scenarioBtn}
+                  key={scenarioObj._id}
+                >
+                  {scenarioObj.name}
+                </FlatButton>
+              );
+            })}
         </View>
         <View style={styles.devicesContainer}>
           <Text style={styles.sectionText}>Devices</Text>

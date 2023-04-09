@@ -9,14 +9,36 @@ import AddNewButton from '../../components/UI/AddNewButton';
 import { useContext, useState } from 'react';
 import LoadingOverlay from '../../components/UI/LoadingOverlay';
 import { UserDataContext } from '../../store/user-data-context';
+import { getAllScenarios } from '../../services/user-data.service';
 
 function ScenarioScreen({ navigation }) {
   function handleAddScenario() {
     navigation.navigate('New Scenario');
   }
 
+  const fetchAllScenarios = async () => {
+    setIsLoading(true);
+
+    try {
+      const scenariosArr = await getAllScenarios(userDataCtx.id);
+      userDataCtx.updateAllScenarios(scenariosArr);
+    } catch (err) {
+      // TODO: handle error
+      console.log(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  function onScrollHandler(event) {
+    const scrollY = event.nativeEvent.contentOffset.y;
+    if (scrollY < -12) {
+      fetchAllScenarios();
+    }
+  }
+
   const userDataCtx = useContext(UserDataContext);
-  const [isLoading, setIsLoading] = useState(false); // TODO: for future if user reload
+  const [isLoading, setIsLoading] = useState(false);
 
   if (isLoading) return <LoadingOverlay message="Loading..." />;
 
@@ -26,7 +48,11 @@ function ScenarioScreen({ navigation }) {
       edges={['bottom', 'left', 'right']}
     >
       <StatusBar style="auto" />
-      <ScrollView style={styles.scenarioList}>
+      <ScrollView
+        style={styles.scenarioList}
+        onScroll={onScrollHandler}
+        scrollEventThrottle={500}
+      >
         {userDataCtx.allScenarios.map((scenarioObj) => {
           return (
             <ScenarioButton text={scenarioObj.name} key={scenarioObj._id} />
@@ -34,7 +60,7 @@ function ScenarioScreen({ navigation }) {
         })}
         <AddNewButton
           onBtnPress={handleAddScenario}
-          btnText="Add New Scenario"
+          btnText="Add New Scenarios"
         />
       </ScrollView>
     </SafeAreaView>

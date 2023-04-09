@@ -9,17 +9,15 @@ import { BACKEND_HOST } from '@env';
 import axios from 'axios';
 import Sensor from '../model/sensor';
 import LoadingOverlay from '../components/UI/LoadingOverlay';
+import { getAllSensors } from '../services/user-data.service';
 
 function StatisticScreen() {
   const fetchSensorsAndInitialize = async () => {
-    try {
-      const sensorsUrl = BACKEND_HOST + `/users/${userDataCtx.id}/sensors`;
-      const { data } = await axios.get(sensorsUrl);
+    setIsLoading(true);
 
-      const sensorsArr = data.metadata.sensors.map(
-        (sensor) =>
-          new Sensor(sensor._id, sensor.name, sensor.type_sensor, sensor.value)
-      );
+    try {
+      const sensorsArr = await getAllSensors(userDataCtx.id);
+      console.log(sensorsArr);
       userDataCtx.updateAllSensors(sensorsArr);
 
       setTableData(
@@ -43,6 +41,13 @@ function StatisticScreen() {
     }
   };
 
+  function onScrollHandler(event) {
+    const scrollY = event.nativeEvent.contentOffset.y;
+    if (scrollY < -12) {
+      fetchSensorsAndInitialize();
+    }
+  }
+
   const userDataCtx = useContext(UserDataContext);
   const headData = ['Name', 'Type', 'Value'];
   const [tableData, setTableData] = useState([]);
@@ -57,7 +62,11 @@ function StatisticScreen() {
   }
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      onScroll={onScrollHandler}
+      scrollEventThrottle={500}
+    >
       <Text style={styles.addSensorInstructionText}>
         To add a new sensor, please manually connect it to the central server.
       </Text>

@@ -12,6 +12,7 @@ import { UserDataContext } from '../../store/user-data-context';
 import axios from 'axios';
 import LoadingOverlay from '../../components/UI/LoadingOverlay';
 import Automation from '../../model/automation';
+import { getAllAutomations } from '../../services/user-data.service';
 
 function AutomationScreen({ navigation }) {
   // var [count, setCount] = useState(0);
@@ -20,14 +21,10 @@ function AutomationScreen({ navigation }) {
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchAutomations = async () => {
-    try {
-      const automationsUrl =
-        BACKEND_HOST + `/users/${userDataCtx.id}/automations`;
-      const { data } = await axios.get(automationsUrl);
+    setIsLoading(true);
 
-      const autosArr = data.metadata.automations.map(
-        (autom) => new Automation(autom._id, autom.name)
-      );
+    try {
+      const autosArr = await getAllAutomations(userDataCtx.id);
       userDataCtx.updateAllAutomations(autosArr);
     } catch (err) {
       // TODO: handle error...
@@ -50,6 +47,13 @@ function AutomationScreen({ navigation }) {
     navigation.navigate('Detail Automation');
   }
 
+  function onScrollHandler(event) {
+    const scrollY = event.nativeEvent.contentOffset.y;
+    if (scrollY < -12) {
+      fetchAutomations();
+    }
+  }
+
   if (isLoading) {
     return <LoadingOverlay message="Loading..." />;
   }
@@ -60,7 +64,11 @@ function AutomationScreen({ navigation }) {
       edges={['bottom', 'left', 'right']}
     >
       <StatusBar style="auto" />
-      <ScrollView style={styles.scenarioList}>
+      <ScrollView
+        style={styles.scenarioList}
+        onScroll={onScrollHandler}
+        scrollEventThrottle={500}
+      >
         {userDataCtx.allAutomations.map((autoObj) => {
           return (
             <ScenarioButton
