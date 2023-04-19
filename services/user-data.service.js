@@ -1,31 +1,31 @@
 import { BACKEND_HOST } from '@env';
 import Device from '../model/device';
-import axios from 'axios';
+import axios, { Axios } from 'axios';
 import Scenario from '../model/scenario';
 import Sensor from '../model/sensor';
 import Automation from '../model/automation';
 
-async function getAllDevices(userId) {
-  const devicesUrl = BACKEND_HOST + `/users/${userId}/devices`;
-  const { data: devicesData } = await axios.get(devicesUrl);
+async function getAllDevices(instance) {
+  // const devicesUrl = BACKEND_HOST + `/users/${userId}/devices`;
+  // const { data: devicesData } = await axios.get(devicesUrl);
+  const { data: devicesData } = await instance.get("/devices");
 
   return devicesData.metadata.devices.map(
     (device) => new Device(device._id, device.name, device.state)
   );
 }
 
-async function getAllScenarios(userId) {
-  const scenariosUrl = BACKEND_HOST + `/users/${userId}/scenarios`;
-  const { data: scerariosData } = await axios.get(scenariosUrl);
+async function getAllScenarios(instance) {
+  const { data: scerariosData } = await instance.get("/scenarios");
 
   return scerariosData.metadata.scenarios.map(
     (scenario) => new Scenario(scenario._id, scenario.name, scenario.isFavorite)
   );
 }
 
-async function getAllSensors(userId) {
+async function getAllSensors(instance) {
   const sensorsUrl = BACKEND_HOST + `/users/${userId}/sensors`;
-  const { data } = await axios.get(sensorsUrl);
+  const { data } = await instance.get(sensorsUrl);
 
   return data.metadata.sensors.map(
     (sensor) =>

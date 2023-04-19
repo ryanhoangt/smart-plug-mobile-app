@@ -1,5 +1,4 @@
 import { useContext, useEffect } from 'react';
-import './ignoreWarnings';
 import { StatusBar } from 'expo-status-bar';
 import { useFonts } from 'expo-font';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -19,6 +18,7 @@ import StatisticScreen from './screens/StatisticScreen';
 import ScenarioStack from './screens/ScenarioPage';
 import AutomationStack from './screens/AutomationPage/AutomationStack';
 import { AutomationScreenOptions } from './screens/AutomationPage/AutomationStack';
+import './ignoreWarnings';
 
 SplashScreen.preventAutoHideAsync()
   .then((_) => {})

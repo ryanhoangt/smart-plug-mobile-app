@@ -45,16 +45,16 @@ function HomeScreen() {
     setTimeout(getLiveTime, 1000); // Update every second
   }
 
-  const fetchDevicesAndScenarios = async () => {
+  const fetchDevicesAndScenarios = async (instance) => {
     setIsLoading(true);
 
     try {
       // fetch all devices and store
-      const devicesArr = await getAllDevices(userDataCtx.id);
+      const devicesArr = await getAllDevices(instance);
       userDataCtx.updateAllDevices(devicesArr);
 
       // fetch all scenarios without actions and store
-      const scenariosArr = await getAllScenarios(userDataCtx.id);
+      const scenariosArr = await getAllScenarios(instance);
       userDataCtx.updateAllScenarios(scenariosArr);
     } catch (err) {
       // TODO: handle error, retry..., user scroll..
@@ -92,8 +92,13 @@ function HomeScreen() {
   useEffect(() => {
     getLiveTime();
 
-    fetchDevicesAndScenarios();
-  }, []);
+    const instance = axios.create({
+      baseURL: 'http://dat2409.online/api',
+      timeout: 10000,
+      headers: { Authorization: 'Bearer ' + authCtx.token },
+    });
+    fetchDevicesAndScenarios(instance);
+  }, [authCtx]);
 
   if (isLoading) {
     return <LoadingOverlay message="Loading..." />;
