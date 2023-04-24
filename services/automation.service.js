@@ -4,7 +4,6 @@ import { createInstance } from './axios.service';
 
 async function getAllAutomations(instance) {
   const { data } = await instance.get('/automations');
-  console.log(data);
   return data.metadata.automations.map(
     ({ _id, name }) => new Automation(_id, name)
   );

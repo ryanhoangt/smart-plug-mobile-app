@@ -17,7 +17,6 @@ function StatisticScreen() {
 
     try {
       const sensorsArr = await getAllSensors(userDataCtx.id);
-      console.log(sensorsArr);
       userDataCtx.updateAllSensors(sensorsArr);
 
       setTableData(

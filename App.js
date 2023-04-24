@@ -11,7 +11,7 @@ import { AntDesign, Entypo } from '@expo/vector-icons';
 import OnboardScreen from './screens/OnboardScreen';
 import LoginScreen from './screens/LoginScreen';
 import SignupScreen from './screens/SignupScreen';
-import HomeScreen from './screens/HomeScreen';
+import HomeScreen from './screens/HomePage';
 import AutomationScreen from './screens/AutomationPage/AutomationScreen';
 import { ScenarioScreenOptions } from './screens/ScenarioPage/ScenarioScreen';
 import StatisticScreen from './screens/StatisticScreen';
@@ -87,23 +87,25 @@ function AuthenticatedStack() {
         options={{
           headerShown: false,
           tabBarLabel: 'Scenarios',
-          tabBarIcon: ({ focused, size }) => (
-            <Image
-              style={{ height: size, width: size }}
-              source={focused ? scenarioIconOrange : scenarioIcon}
+          tabBarIcon: ({ focused, size, color }) => (
+            <Entypo
+              name="flow-tree"
+              size={size}
+              color={focused ? Colors.orangePrimary : color}
             />
           ),
           tabBarActiveTintColor: Colors.orangePrimary,
         }}
       />
       <Tab.Screen
-        name="Sensors' Data"
+        name="Sensors"
         component={StatisticScreen}
         options={{
-          tabBarIcon: ({ focused, size }) => (
-            <Image
-              style={{ height: size, width: size }}
-              source={focused ? viewSensorIconOrange : viewSensorIcon}
+          tabBarIcon: ({ focused, size, color }) => (
+            <Entypo
+              name="adjust"
+              size={size}
+              color={focused ? Colors.orangePrimary : color}
             />
           ),
           tabBarActiveTintColor: Colors.orangePrimary,
@@ -130,6 +132,7 @@ export default function App() {
     'open-sans': require('./assets/fonts/OpenSans-Regular.ttf'),
     'open-sans-bold': require('./assets/fonts/OpenSans-Bold.ttf'),
     'be-vietnam': require('./assets/fonts/BeVietnamPro-Regular.ttf'),
+    'be-vietnam-medium': require('./assets/fonts/BeVietnamPro-Medium.ttf'),
     'epilogue-700': require('./assets/fonts/Epilogue-SemiBold-700.ttf'),
     Pacifico: require('./assets/fonts/Pacifico-Regular.ttf'),
   });

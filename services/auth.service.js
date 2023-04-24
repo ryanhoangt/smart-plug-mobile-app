@@ -23,4 +23,8 @@ async function register(name, email, password) {
   };
 }
 
+function logout() {
+
+}
+
 export { login, register };

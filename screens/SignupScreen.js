@@ -34,7 +34,6 @@ const SignupScreen = () => {
       authCtx.onSuccessAuth(token);
       userDataCtx.onSuccessAuth(id, name);
     } catch (err) {
-      console.log(err);
       Alert.alert(
         'Authentication failed',
         'Could not sign up. Please check your credentials or try again later.'
