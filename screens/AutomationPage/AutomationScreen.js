@@ -1,8 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
-import { ScrollView, StyleSheet } from 'react-native';
+import { RefreshControl, ScrollView, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Colors } from '../../constants/colors';
-import ScenarioButton from '../../components/UI/ScenarioButton';
 import { defaultStyles } from '../../constants/defaultStyle';
 import { useContext } from 'react';
 import AddNewButton from '../../components/UI/AddNewButton';
@@ -11,7 +10,6 @@ import { getAllAutomations } from '../../services/automation.service';
 import AutomationList from './components/AutomationList';
 import useFetch from '../../hooks/useFetchData';
 import { createInstance } from '../../services/axios.service';
-import LoadingOverlay from '../../components/UI/LoadingOverlay';
 
 function AutomationScreen({ navigation }) {
   const { token } = useContext(AuthContext);
@@ -28,17 +26,6 @@ function AutomationScreen({ navigation }) {
     navigation.navigate('Detail Automation', { id });
   }
 
-  function reloadData(event) {
-    const scrollY = event.nativeEvent.contentOffset.y;
-    if (scrollY < -12) {
-      fetchData();
-    }
-  }
-
-  if (loading) {
-    return <LoadingOverlay message="Loading..." />;
-  }
-
   return (
     <SafeAreaView
       style={defaultStyles.container}
@@ -47,8 +34,9 @@ function AutomationScreen({ navigation }) {
       <StatusBar style="auto" />
       <ScrollView
         style={styles.scenarioList}
-        onScroll={reloadData}
-        scrollEventThrottle={500}
+        refreshControl={
+          <RefreshControl refreshing={loading} onRefresh={fetchData} />
+        }
       >
         <AutomationList onElementPress={gotoDetailPage} automations={data} />
         <AddNewButton

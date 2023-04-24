@@ -1,23 +1,25 @@
 import { View, Text, Pressable, StyleSheet, Image } from 'react-native';
-import { UserDataContext } from '../../../store/user-data-context';
-import useTimer from "../../../hooks/useTimer"
+import useTimer from '../../../hooks/useTimer';
 import { useContext } from 'react';
 import { AuthContext } from '../../../store/auth-context';
-const avatarPlaceholderImg = require('../../../assets/images/avatar-placeholder.jpg');
+import { UserContext } from '../../../store/userContext';
+const avatarImg = require('../../../assets/images/avatar-placeholder.jpg');
 
 function Header() {
-  const userDataCtx = useContext(UserDataContext);
-  const timeString = useTimer()
+  const {name} = useContext(UserContext)
+  const timeString = useTimer();
   const { onLogout } = useContext(AuthContext);
 
   return (
     <View style={styles.welcomeHeading}>
       <View style={styles.headingTextContainer}>
         <Text style={{ color: '#9BA4B0' }}>{timeString}</Text>
-        <Text style={[styles.welcomeText, { fontWeight: 800 }]}>Welcome!</Text>
+        <Text style={[styles.welcomeText, { fontWeight: 800 }]}>
+          Welcome, {name}
+        </Text>
       </View>
       <Pressable style={styles.avatarImg} onPress={() => onLogout()}>
-        <Image source={avatarPlaceholderImg} style={styles.avatarImg} />
+        <Image source={avatarImg} style={styles.avatarImg} />
       </Pressable>
     </View>
   );
@@ -47,6 +49,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 24,
     marginTop: 5,
+  },
+  avatarImg: {
+    width: 50,
+    height: 50,
+    borderRadius: 100,
   },
 });
 export default Header;

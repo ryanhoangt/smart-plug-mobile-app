@@ -4,6 +4,7 @@ import { createContext, useEffect, useState } from 'react';
 
 export const AuthContext = createContext({
   token: '',
+  name: '',
   isAuthenticated: false,
   onSuccessAuth: () => {},
   onLogout: () => {},
@@ -11,6 +12,7 @@ export const AuthContext = createContext({
 
 function AuthContextProvider({ children }) {
   const [authToken, setAuthToken] = useState();
+  const [name, setName] = useState('')
   const [axiosInstance, setAxiosInstance] = useState({});
 
   // Fetch saved token if exists

@@ -3,6 +3,7 @@ import {
   Alert,
   Image,
   Pressable,
+  RefreshControl,
   ScrollView,
   StyleSheet,
   Text,
@@ -31,13 +32,6 @@ function HomeScreen() {
     sheetRef.current.snapTo(0);
   }
 
-  function onScrollHandler(event) {
-    const scrollY = event.nativeEvent.contentOffset.y;
-    if (scrollY < -12) {
-      fetchFunction();
-    }
-  }
-
   // CONTEXTS, STATES, REFS
   const { token } = useContext(AuthContext);
   const sheetRef = useRef(null);
@@ -51,22 +45,19 @@ function HomeScreen() {
     }
   });
 
-  if (loading) {
-    return <LoadingOverlay message="Loading..." />;
-  }
-
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView
         style={styles.homeContainer}
-        onScroll={onScrollHandler}
-        scrollEventThrottle={500}
+        refreshControl={
+          <RefreshControl refreshing={loading} onRefresh={fetchFunction} />
+        }
       >
         <StatusBar style="auto" />
         <Header />
         <View style={styles.sectionContainer}>
           <Text style={styles.sectionText}>Scenarios</Text>
-          <ScrollView style={styles.scenariosContainer} horizontal={true}>
+          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
             <ScenarioList scenarios={data && data[1]} />
           </ScrollView>
         </View>
@@ -99,19 +90,8 @@ const styles = StyleSheet.create({
   homeContainer: {
     paddingHorizontal: 20,
   },
-  welcomeHeading: {
-    // backgroundColor: "green",
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 30,
-    marginTop: 10,
-  },
-  headingTextContainer: {},
   sectionContainer: {
-    marginBottom: 30
-  },
-  scenariosContainer: {
-    // paddingVertical: 20,
+    marginBottom: 30,
   },
   devicesContainer: {
     // backgroundColor: "red",
@@ -119,11 +99,6 @@ const styles = StyleSheet.create({
     flexWrap: 1,
     justifyContent: 'space-between',
     gap: 12,
-  },
-  avatarImg: {
-    width: 50,
-    height: 50,
-    borderRadius: 100,
   },
   scenarioBtn: {
     backgroundColor: Colors.bluePrimary,

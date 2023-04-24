@@ -28,6 +28,7 @@ import { Image } from 'react-native';
 import { Colors } from './constants/colors';
 import AuthContextProvider, { AuthContext } from './store/auth-context';
 import UserDataContextProvider from './store/user-data-context';
+import { UserContextProvider } from './store/userContext';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -152,9 +153,9 @@ export default function App() {
     <SafeAreaProvider>
       <StatusBar style="auto" />
       <AuthContextProvider>
-        <UserDataContextProvider>
+        <UserContextProvider>
           <Navigation />
-        </UserDataContextProvider>
+        </UserContextProvider>
       </AuthContextProvider>
     </SafeAreaProvider>
   );
