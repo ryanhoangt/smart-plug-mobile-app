@@ -18,7 +18,6 @@ import axios from 'axios';
 import { BACKEND_HOST } from '@env';
 import AddNewButton from '../components/UI/AddNewButton';
 import AddDeviceForm from '../components/Home/AddDeviceForm';
-import { NativeBaseProvider } from 'native-base';
 import { UserDataContext } from '../store/user-data-context';
 import Device from '../model/device';
 import LoadingOverlay from '../components/UI/LoadingOverlay';
@@ -80,6 +79,10 @@ function HomeScreen() {
     if (scrollY < -12) {
       fetchDevicesAndScenarios();
     }
+  }
+
+  function onFormCancel() {
+    sheetRef.current.snapTo(2);
   }
 
   // CONTEXTS, STATES, REFS
@@ -168,7 +171,14 @@ function HomeScreen() {
         ref={sheetRef}
         snapPoints={[600, 500, -50]}
         borderRadius={20}
-        renderContent={() => <AddDeviceForm />}
+        renderContent={() => (
+          <AddDeviceForm
+            onCancel={onFormCancel}
+            fetchDevicesAndScenarios={fetchDevicesAndScenarios}
+            token={authCtx.token}
+            userId={userDataCtx.id}
+          />
+        )}
         initialSnap={2}
       />
     </SafeAreaView>

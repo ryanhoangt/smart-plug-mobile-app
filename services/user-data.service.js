@@ -42,4 +42,74 @@ async function getAllAutomations(userId) {
   );
 }
 
-export { getAllDevices, getAllScenarios, getAllSensors, getAllAutomations };
+async function createNewDevice(token, userId, deviceName, pinNumber) {
+  const devicesUrl = BACKEND_HOST + `/devices`;
+  console.log(devicesUrl, token, userId, deviceName, pinNumber);
+  const { data } = await axios.post(
+    devicesUrl,
+    {
+      user: userId,
+      name: deviceName,
+      state: false,
+      topic: pinNumber,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  console.log(data);
+}
+
+function _fromTypeSensorToTypeValue(typeSensor) {
+  switch (typeSensor) {
+    case 'Light':
+      return 'analog';
+    case 'Heat':
+      return 'analog';
+    case 'Humidity':
+      return 'analog';
+    case 'Sound':
+      return 'analog';
+    case 'Movement':
+      return 'digital';
+    default:
+      return '';
+  }
+}
+
+async function createNewSensor(
+  token,
+  userId,
+  sensorName,
+  sensorType,
+  pinNumber
+) {
+  const sensorsUrl = BACKEND_HOST + `/sensors`;
+  const { data } = await axios.post(
+    sensorsUrl,
+    {
+      user: userId,
+      name: sensorName,
+      type_value: _fromTypeSensorToTypeValue(sensorType),
+      type_sensor: sensorType,
+      topic: pinNumber,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  console.log(data);
+}
+
+export {
+  getAllDevices,
+  getAllScenarios,
+  getAllSensors,
+  getAllAutomations,
+  createNewDevice,
+  createNewSensor,
+};

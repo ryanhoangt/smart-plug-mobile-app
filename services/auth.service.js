@@ -5,6 +5,7 @@ async function login(email, password) {
   const endpoint = '/auth/login';
   const url = BACKEND_HOST + endpoint;
   const { data } = await axios.post(url, { email, password });
+  console.log(data.metadata.token);
   return {
     id: data.metadata.id,
     token: data.metadata.token,
