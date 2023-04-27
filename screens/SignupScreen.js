@@ -13,7 +13,8 @@ import LoadingOverlay from '../components/UI/LoadingOverlay';
 import { AuthContext } from '../store/auth-context';
 import { register } from '../services/auth.service';
 import useShowPassword from '../hooks/useShowPassword';
-import { UserDataContext } from '../store/user-data-context';
+// import { UserDataContext } from '../store/user-data-context';
+import { UserContext } from '../store/userContext';
 
 const SignupScreen = () => {
   // HANDLERS
@@ -30,11 +31,11 @@ const SignupScreen = () => {
 
     setIsAuthenticating(true);
     try {
-      const { id, token, name } = await register(name, email, password);
+      const { id, token } = await register(name, email, password);
       authCtx.onSuccessAuth(token);
-      userDataCtx.onSuccessAuth(id, name);
+      userDataCtx.onSuccessAuth(id, name, email);
     } catch (err) {
-      console.log(err);
+      console.log(err)
       Alert.alert(
         'Authentication failed',
         'Could not sign up. Please check your credentials or try again later.'
@@ -46,7 +47,7 @@ const SignupScreen = () => {
   // STATES
   const navigation = useNavigation();
   const authCtx = useContext(AuthContext);
-  const userDataCtx = useContext(UserDataContext);
+  const userDataCtx = useContext(UserContext);
   const [passwordVisibility, togglePasswordVisibility] = useShowPassword();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');

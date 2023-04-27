@@ -1,61 +1,29 @@
 import { StatusBar } from 'expo-status-bar';
-import { Button, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { RefreshControl, ScrollView, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Colors } from '../../constants/colors';
-import ScenarioButton from '../../components/UI/ScenarioButton';
-import Header from '../../components/UI/Header';
 import { defaultStyles } from '../../constants/defaultStyle';
-import { useContext, useEffect, useState } from 'react';
+import { useContext } from 'react';
 import AddNewButton from '../../components/UI/AddNewButton';
-import { BACKEND_HOST } from '@env';
-import { UserDataContext } from '../../store/user-data-context';
-import axios from 'axios';
-import LoadingOverlay from '../../components/UI/LoadingOverlay';
-import Automation from '../../model/automation';
-import { getAllAutomations } from '../../services/user-data.service';
+import { AuthContext } from '../../store/auth-context';
+import { getAllAutomations } from '../../services/automation.service';
+import AutomationList from './components/AutomationList';
+import useFetch from '../../hooks/useFetchData';
+import { createInstance } from '../../services/axios.service';
 
 function AutomationScreen({ navigation }) {
-  // var [count, setCount] = useState(0);
-
-  const userDataCtx = useContext(UserDataContext);
-  const [isLoading, setIsLoading] = useState(true);
-
-  const fetchAutomations = async () => {
-    setIsLoading(true);
-
-    try {
-      const autosArr = await getAllAutomations(userDataCtx.id);
-      userDataCtx.updateAllAutomations(autosArr);
-    } catch (err) {
-      // TODO: handle error...
-      console.log(err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchAutomations();
-  }, []);
+  const { token } = useContext(AuthContext);
+  const [data, loading, error, fetchData] = useFetch(async () => {
+    const instance = createInstance(token);
+    return await getAllAutomations(instance);
+  });
 
   function handleAddAutomation() {
     navigation.navigate('New Automation');
   }
 
-  function onPress() {
-    // setCount(count+1)
-    navigation.navigate('Detail Automation');
-  }
-
-  function onScrollHandler(event) {
-    const scrollY = event.nativeEvent.contentOffset.y;
-    if (scrollY < -12) {
-      fetchAutomations();
-    }
-  }
-
-  if (isLoading) {
-    return <LoadingOverlay message="Loading..." />;
+  function gotoDetailPage(id) {
+    navigation.navigate('Detail Automation', { id });
   }
 
   return (
@@ -66,31 +34,15 @@ function AutomationScreen({ navigation }) {
       <StatusBar style="auto" />
       <ScrollView
         style={styles.scenarioList}
-        onScroll={onScrollHandler}
-        scrollEventThrottle={500}
+        refreshControl={
+          <RefreshControl refreshing={loading} onRefresh={fetchData} />
+        }
       >
-        {userDataCtx.allAutomations.map((autoObj) => {
-          return (
-            <ScenarioButton
-              onPress={onPress}
-              text={autoObj.name}
-              key={autoObj._id}
-            />
-          );
-        })}
+        <AutomationList onElementPress={gotoDetailPage} automations={data} />
         <AddNewButton
           btnText="Add New Automation"
           onBtnPress={handleAddAutomation}
         />
-        {/* <View style={styles.addBtn}>
-          <Button
-            onPress={handleAddAutomation}
-            color={Colors.grayPrimary}
-            title="+ Add new Automation"
-            accessibilityLabel="Add new Automation"
-          />
-        </View> */}
-        {/* <Text>Count: {count}</Text> */}
       </ScrollView>
     </SafeAreaView>
   );

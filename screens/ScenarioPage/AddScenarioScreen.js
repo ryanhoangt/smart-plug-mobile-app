@@ -13,10 +13,10 @@ export default function AddScenarioScreen() {
       <View style={styles.section}>
         <Text style={defaultStyles.sectionTitle}>Accessories</Text>
         <View style={styles.deviceList}>
-          <DeviceController deviceName="Shades" />
+          {/* <DeviceController deviceName="Shades" />
           <DeviceController deviceName="Light 1" />
           <DeviceController deviceName="Light 2" />
-          <DeviceController deviceName="Shades" />
+          <DeviceController deviceName="Shades" /> */}
         </View>
       </View>
 

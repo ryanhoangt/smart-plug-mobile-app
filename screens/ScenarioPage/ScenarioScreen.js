@@ -1,46 +1,25 @@
 import { StatusBar } from 'expo-status-bar';
-import { Button, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { RefreshControl, ScrollView, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Colors } from '../../constants/colors';
-import ScenarioButton from '../../components/UI/ScenarioButton';
-import Header from '../../components/UI/Header';
 import { defaultStyles } from '../../constants/defaultStyle';
 import AddNewButton from '../../components/UI/AddNewButton';
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import LoadingOverlay from '../../components/UI/LoadingOverlay';
-import { UserDataContext } from '../../store/user-data-context';
 import { getAllScenarios } from '../../services/user-data.service';
+import useFetch from '../../hooks/useFetchData';
+import { createInstance } from '../../services/axios.service';
+import { AuthContext } from '../../store/auth-context';
+import ScenarioList from '../../components/ScenarioList';
 
 function ScenarioScreen({ navigation }) {
   function handleAddScenario() {
     navigation.navigate('New Scenario');
   }
-
-  const fetchAllScenarios = async () => {
-    setIsLoading(true);
-
-    try {
-      const scenariosArr = await getAllScenarios(userDataCtx.id);
-      userDataCtx.updateAllScenarios(scenariosArr);
-    } catch (err) {
-      // TODO: handle error
-      console.log(err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  function onScrollHandler(event) {
-    const scrollY = event.nativeEvent.contentOffset.y;
-    if (scrollY < -12) {
-      fetchAllScenarios();
-    }
-  }
-
-  const userDataCtx = useContext(UserDataContext);
-  const [isLoading, setIsLoading] = useState(false);
-
-  if (isLoading) return <LoadingOverlay message="Loading..." />;
+  const { token } = useContext(AuthContext);
+  const [scenarios, loading, fetchFunction] = useFetch(() => {
+    const instance = createInstance(token);
+    return getAllScenarios(instance);
+  });
 
   return (
     <SafeAreaView
@@ -49,15 +28,11 @@ function ScenarioScreen({ navigation }) {
     >
       <StatusBar style="auto" />
       <ScrollView
-        style={styles.scenarioList}
-        onScroll={onScrollHandler}
-        scrollEventThrottle={500}
+        refreshControl={
+          <RefreshControl refreshing={loading} onRefresh={fetchFunction} />
+        }
       >
-        {userDataCtx.allScenarios.map((scenarioObj) => {
-          return (
-            <ScenarioButton text={scenarioObj.name} key={scenarioObj._id} />
-          );
-        })}
+        <ScenarioList scenarios={scenarios} />
         <AddNewButton
           onBtnPress={handleAddScenario}
           btnText="Add New Scenarios"
@@ -67,12 +42,6 @@ function ScenarioScreen({ navigation }) {
   );
 }
 
-const styles = StyleSheet.create({
-  scenarioList: {
-    // marginTop: 12,
-    // backgroundColor: "red",
-    // flex: 1,
-  },
-});
+const styles = StyleSheet.create({});
 
 export default ScenarioScreen;

@@ -1,6 +1,6 @@
 const { default: axios } = require('axios');
-import { BACKEND_HOST } from '@env';
 
+const BACKEND_HOST = "http://dat2409.online/api"
 async function login(email, password) {
   const endpoint = '/auth/login';
   const url = BACKEND_HOST + endpoint;
@@ -22,6 +22,10 @@ async function register(name, email, password) {
     token: data.metadata.token,
     name: data.metadata.name,
   };
+}
+
+function logout() {
+
 }
 
 export { login, register };

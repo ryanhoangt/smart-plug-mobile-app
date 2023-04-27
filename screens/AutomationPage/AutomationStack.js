@@ -5,14 +5,24 @@ import AddAutomationScreen from './AddAutomationScreen';
 import DetailAutomationScreen from './DetailAutomationScreen';
 import { Button, StyleSheet } from 'react-native';
 import { Colors } from '../../constants/colors';
+import { AntDesign, Entypo } from '@expo/vector-icons';
 
 const Stack = createNativeStackNavigator();
 
 export const AutomationScreenOptions = {
   headerShown: false,
+  tabBarLabel: 'Automations',
   headerStyle: {
     backgroundColor: Colors.background,
   },
+  tabBarIcon: ({ size, focused, color }) => (
+    <Entypo
+      name="calendar"
+      size={size}
+      color={focused ? Colors.orangePrimary : color}
+    />
+  ),
+  tabBarActiveTintColor: Colors.orangePrimary,
 };
 
 const AutomationStackOption = ({ navigation, back }) => ({

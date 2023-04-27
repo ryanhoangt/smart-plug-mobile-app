@@ -1,33 +1,31 @@
 import { useContext, useEffect } from 'react';
-import './ignoreWarnings';
 import { StatusBar } from 'expo-status-bar';
 import { useFonts } from 'expo-font';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { AntDesign, Entypo } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
 
 // SCREENS
 import OnboardScreen from './screens/OnboardScreen';
 import LoginScreen from './screens/LoginScreen';
 import SignupScreen from './screens/SignupScreen';
-import HomeScreen from './screens/HomeScreen';
-import AutomationScreen from './screens/AutomationPage/AutomationScreen';
-import { ScenarioScreenOptions } from './screens/ScenarioPage/ScenarioScreen';
+import HomeScreen from './screens/HomePage';
 import StatisticScreen from './screens/StatisticScreen';
 import ScenarioStack from './screens/ScenarioPage';
 import AutomationStack from './screens/AutomationPage/AutomationStack';
 import { AutomationScreenOptions } from './screens/AutomationPage/AutomationStack';
+import './ignoreWarnings';
+import {} from './services/mqtt.service'
 
 SplashScreen.preventAutoHideAsync()
   .then((_) => {})
   .catch(console.warn);
 import * as SplashScreen from 'expo-splash-screen';
-import { Image } from 'react-native';
 import { Colors } from './constants/colors';
 import AuthContextProvider, { AuthContext } from './store/auth-context';
-import UserDataContextProvider from './store/user-data-context';
+import { UserContextProvider } from './store/userContext';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -42,7 +40,6 @@ function AuthStack() {
   return (
     <Stack.Navigator
       screenOptions={{
-        //
         headerShown: false,
       }}
     >
@@ -87,23 +84,25 @@ function AuthenticatedStack() {
         options={{
           headerShown: false,
           tabBarLabel: 'Scenarios',
-          tabBarIcon: ({ focused, size }) => (
-            <Image
-              style={{ height: size, width: size }}
-              source={focused ? scenarioIconOrange : scenarioIcon}
+          tabBarIcon: ({ focused, size, color }) => (
+            <Entypo
+              name="flow-tree"
+              size={size}
+              color={focused ? Colors.orangePrimary : color}
             />
           ),
           tabBarActiveTintColor: Colors.orangePrimary,
         }}
       />
       <Tab.Screen
-        name="Sensors' Data"
+        name="Sensors"
         component={StatisticScreen}
         options={{
-          tabBarIcon: ({ focused, size }) => (
-            <Image
-              style={{ height: size, width: size }}
-              source={focused ? viewSensorIconOrange : viewSensorIcon}
+          tabBarIcon: ({ focused, size, color }) => (
+            <Entypo
+              name="adjust"
+              size={size}
+              color={focused ? Colors.orangePrimary : color}
             />
           ),
           tabBarActiveTintColor: Colors.orangePrimary,
@@ -130,8 +129,9 @@ export default function App() {
     'open-sans': require('./assets/fonts/OpenSans-Regular.ttf'),
     'open-sans-bold': require('./assets/fonts/OpenSans-Bold.ttf'),
     'be-vietnam': require('./assets/fonts/BeVietnamPro-Regular.ttf'),
+    'be-vietnam-medium': require('./assets/fonts/BeVietnamPro-Medium.ttf'),
     'epilogue-700': require('./assets/fonts/Epilogue-SemiBold-700.ttf'),
-    Pacifico: require('./assets/fonts/Pacifico-Regular.ttf'),
+    'Pacifico': require('./assets/fonts/Pacifico-Regular.ttf'),
   });
 
   useEffect(() => {
@@ -149,9 +149,9 @@ export default function App() {
     <SafeAreaProvider>
       <StatusBar style="auto" />
       <AuthContextProvider>
-        <UserDataContextProvider>
+        <UserContextProvider>
           <Navigation />
-        </UserDataContextProvider>
+        </UserContextProvider>
       </AuthContextProvider>
     </SafeAreaProvider>
   );
