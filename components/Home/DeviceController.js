@@ -1,20 +1,32 @@
-import { useState } from 'react';
-import { StyleSheet, Switch, Text, View } from 'react-native';
+import { useEffect, useState } from 'react';
+import { DeviceEventEmitter, StyleSheet, Switch, Text, View } from 'react-native';
 
 import { Colors } from '../../constants/colors';
 
-function DeviceController({ deviceName }) {
-  const [isOn, setIsOn] = useState(false);
+function DeviceController({ device }) {
+  const { id, name, state, topic } = device;
+  const [isOn, setIsOn] = useState(state);
 
   const toggleSwitch = () => {
+    // device.toggleState()
+    device.setState(!isOn)
     setIsOn((prevState) => !prevState);
-
-    // TODO: send POST request to server
   };
+
+  useEffect(() => {
+    DeviceEventEmitter.addListener(topic, (message) => {
+      if (message === "1") {
+        setIsOn(true)
+      }
+      else {
+        setIsOn(false)
+      } 
+    })
+  }, [])
 
   return (
     <View style={styles.deviceContainer}>
-      <Text style={styles.deviceNameText}>{deviceName}</Text>
+      <Text numberOfLines={1} style={styles.deviceNameText}>{name}</Text>
       <View style={styles.toggleContainer}>
         <Text style={styles.toggleText}>{isOn ? 'On' : 'Off'}</Text>
         <Switch
@@ -43,6 +55,7 @@ const styles = StyleSheet.create({
     },
     shadowRadius: 6,
     shadowOpacity: 0.5,
+    marginBottom: 18,
   },
   toggleContainer: {
     flexDirection: 'row',
@@ -51,9 +64,9 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   deviceNameText: {
-    fontFamily: 'be-vietnam',
+    fontFamily: 'be-vietnam-medium',
     color: 'rgba(30, 41, 51, 1)',
-    fontSize: 18,
+    fontSize: 16,
   },
   toggleText: {
     color: '#798794',

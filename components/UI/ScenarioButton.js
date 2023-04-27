@@ -6,21 +6,23 @@ import { Colors } from '../../constants/colors';
 function ScenarioButton({ text, onPress }) {
   return (
     <FlatButton style={styles.scenarioBtn} textAlign="left" onPress={onPress}>
-      {text}
+      <Text numberOfLines={1} style={styles.text}>{text}</Text>
     </FlatButton>
   );
 }
 
 const styles = StyleSheet.create({
   scenarioBtn: {
-    fontSize: 20,
+    fontSize: 2,
+    maxWidth: "100%",
     textAlign: 'left',
     backgroundColor: Colors.bluePrimary,
     // margin: 8,
+    marginRight: 10,
     marginVertical: 6,
     paddingVertical: 12,
-    borderRadius: 20,
-    elevation: 2, // add shadow - android only
+    borderRadius: 10,
+    elevation: 1, // add shadow - android only
     shadowColor: 'black', // add shadow - ios only
     shadowOffset: {
       width: 0,
@@ -29,6 +31,10 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     shadowOpacity: 0.5,
   },
+
+  text: {
+    fontSize: 16
+  }
 });
 
 export default ScenarioButton;

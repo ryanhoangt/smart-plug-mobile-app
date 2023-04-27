@@ -1,8 +1,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 import { createContext, useEffect, useState } from 'react';
 
 export const AuthContext = createContext({
   token: '',
+  name: '',
   isAuthenticated: false,
   onSuccessAuth: () => {},
   onLogout: () => {},
@@ -10,6 +12,7 @@ export const AuthContext = createContext({
 
 function AuthContextProvider({ children }) {
   const [authToken, setAuthToken] = useState();
+  const [name, setName] = useState('')
 
   // Fetch saved token if exists
   useEffect(() => {
@@ -31,8 +34,6 @@ function AuthContextProvider({ children }) {
 
     async function checkExpirationAndSetTimeout() {
       const expiredAt = new Date(await AsyncStorage.getItem('expiredAt'));
-      //   console.log(authToken);
-      //   console.log(expiredAt);
       const curTime = new Date();
       if (expiredAt - curTime < 0) {
         onLogout();

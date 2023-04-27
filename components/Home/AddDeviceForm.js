@@ -13,17 +13,14 @@ export default class AddDeviceForm extends Component {
     };
 
     this.onDropDownChange = (value) => {
-      console.log(value);
       this.setState({ ...this.state, deviceType: value });
     };
 
     this.onDeviceNameChange = (value) => {
-      console.log(value);
       this.setState({ ...this.state, deviceName: value });
     };
 
     this.onPinNumberChange = (value) => {
-      console.log(value);
       this.setState({ ...this.state, pinNumber: value });
     };
   }
