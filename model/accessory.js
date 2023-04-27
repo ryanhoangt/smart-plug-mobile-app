@@ -7,13 +7,13 @@ class Accessory {
     this.name = name
     this.topic = getAdafruitKey(topic)
     this.user = user
-
   }
 
   mount() {
     this.mqttClient = createMQTTClient()
     this.mqttClient.on('connect', this.onConnect.bind(this))
     this.mqttClient.on('message', this.onMessage.bind(this))
+    this.mqttClient.on("error", (error) => console.log(error.message))
   }
 
   onConnect() {
@@ -31,7 +31,7 @@ class Accessory {
   }
 
   unmount() {
-    this.mqttClient.end()
+    // this.mqttClient.end()
   }
 }
 
