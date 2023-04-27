@@ -1,26 +1,9 @@
-import { DeviceEventEmitter } from 'react-native'
-import { createMQTTClient, getAdafruitKey } from '../services/mqtt.service'
+import Accessory from './accessory'
 
-export default class Device {
+export default class Device extends Accessory {
   constructor(_id, name, state, topic, user) {
-    this.id = _id
-    this.name = name
+    super(_id, name, topic, user)
     this.state = state
-    this.topic = getAdafruitKey(topic)
-    this.user = user
-
-    this.mqttClient = createMQTTClient()
-    this.mqttClient.on('connect', this.onConnect.bind(this))
-    this.mqttClient.on('message', this.onMessage.bind(this))
-    // this.listen()
-  }
-
-  onConnect() {
-    this.mqttClient.subscribe(this.topic, (err) => {
-      if (err) return console.error(`Failed to subscribe ${this.topic}`)
-
-      console.log(`Subscribed to ${this.topic}`)
-    })
   }
 
   toggleState() {
@@ -31,10 +14,5 @@ export default class Device {
   setState(state) {
     this.state = state
     this.mqttClient.publish(this.topic, state ? '1' : '0')
-  }
-
-  onMessage(topic, message) {
-    console.log(topic, message.toString())
-    DeviceEventEmitter.emit(topic, message.toString())
   }
 }

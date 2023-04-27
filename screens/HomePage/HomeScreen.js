@@ -1,4 +1,4 @@
-import { StatusBar } from 'expo-status-bar';
+import { StatusBar } from 'expo-status-bar'
 import {
   Alert,
   RefreshControl,
@@ -6,40 +6,46 @@ import {
   StyleSheet,
   Text,
   View,
-} from 'react-native';
-import BottomSheet from 'reanimated-bottom-sheet';
-import { Colors } from '../../constants/colors';
-import { useContext, useRef } from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { AuthContext } from '../../store/auth-context';
-import AddNewButton from '../../components/UI/AddNewButton';
-import AddDeviceForm from '../../components/Home/AddDeviceForm';
-import { getAllDevices } from '../../services/device.service';
-import { getAllScenarios } from '../../services/scenario.service';
-import useFetch from '../../hooks/useFetchData';
-import { createInstance } from '../../services/axios.service';
-import DeviceList from '../../components/DeviceList';
-import ScenarioList from '../../components/ScenarioList';
-import Header from './components/Header';
+} from 'react-native'
+import BottomSheet from 'reanimated-bottom-sheet'
+import { Colors } from '../../constants/colors'
+import { useContext, useRef } from 'react'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { AuthContext } from '../../store/auth-context'
+import AddNewButton from '../../components/UI/AddNewButton'
+import AddDeviceForm from '../../components/Home/AddDeviceForm'
+import { getAllDevices } from '../../services/device.service'
+import { getAllScenarios } from '../../services/scenario.service'
+import useFetch from '../../hooks/useFetchData'
+import { createInstance } from '../../services/axios.service'
+import DeviceList from '../../components/DeviceList'
+import ScenarioList from '../../components/ScenarioList'
+import Header from './components/Header'
+import { UserContext } from '../../store/userContext'
 
 function HomeScreen() {
   // HANDLERS
   function addNewDeviceHandler() {
-    sheetRef.current.snapTo(0);
+    sheetRef.current.snapTo(0)
   }
 
   // CONTEXTS, STATES, REFS
-  const { token } = useContext(AuthContext);
-  const sheetRef = useRef(null);
+  const { token } = useContext(AuthContext)
+  const { id } = useContext(UserContext)
+  const sheetRef = useRef(null)
 
   const [data, loading, fetchFunction] = useFetch(() => {
     try {
-      const instance = createInstance(token);
-      return Promise.all([getAllDevices(instance), getAllScenarios(instance)]);
+      const instance = createInstance(token)
+      return Promise.all([getAllDevices(instance), getAllScenarios(instance)])
     } catch (err) {
-      return Alert.alert('Something wrong happens');
+      return Alert.alert('Something wrong happens')
     }
-  });
+  })
+
+  function onFormCancel() {
+    sheetRef.current.snapTo(2)
+  }
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -75,11 +81,18 @@ function HomeScreen() {
         ref={sheetRef}
         snapPoints={[600, 500, -100]}
         borderRadius={20}
-        renderContent={() => <AddDeviceForm />}
+        renderContent={() => (
+          <AddDeviceForm
+            onCancel={onFormCancel}
+            fetchDevicesAndScenarios={fetchFunction}
+            token={token}
+            userId={id}
+          />
+        )}
         initialSnap={2}
       />
     </SafeAreaView>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -95,7 +108,7 @@ const styles = StyleSheet.create({
     flexWrap: 1,
     justifyContent: 'space-between',
     gap: 12,
-    rowGap: 12
+    rowGap: 12,
   },
   scenarioBtn: {
     backgroundColor: Colors.bluePrimary,
@@ -136,6 +149,6 @@ const styles = StyleSheet.create({
     marginTop: 0,
     marginBottom: 20,
   },
-});
+})
 
-export default HomeScreen;
+export default HomeScreen

@@ -31,7 +31,6 @@ const SignupScreen = () => {
 
     setIsAuthenticating(true);
     try {
-      console.log(name, email, password)
       const { id, token } = await register(name, email, password);
       authCtx.onSuccessAuth(token);
       userDataCtx.onSuccessAuth(id, name, email);

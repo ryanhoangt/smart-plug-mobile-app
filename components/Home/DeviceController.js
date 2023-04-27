@@ -1,32 +1,41 @@
-import { useEffect, useState } from 'react';
-import { DeviceEventEmitter, StyleSheet, Switch, Text, View } from 'react-native';
+import { useEffect, useState } from 'react'
+import {
+  DeviceEventEmitter,
+  StyleSheet,
+  Switch,
+  Text,
+  View,
+} from 'react-native'
 
-import { Colors } from '../../constants/colors';
+import { Colors } from '../../constants/colors'
 
 function DeviceController({ device }) {
-  const { id, name, state, topic } = device;
-  const [isOn, setIsOn] = useState(state);
+  const { id, name, state, topic } = device
+  const [isOn, setIsOn] = useState(state)
 
   const toggleSwitch = () => {
     // device.toggleState()
     device.setState(!isOn)
-    setIsOn((prevState) => !prevState);
-  };
+    setIsOn((prevState) => !prevState)
+  }
 
   useEffect(() => {
-    DeviceEventEmitter.addListener(topic, (message) => {
-      if (message === "1") {
-        setIsOn(true)
-      }
-      else {
-        setIsOn(false)
-      } 
+    device.mount()
+    let subscribtion = DeviceEventEmitter.addListener(topic, (message) => {
+      setIsOn(message === '1')
     })
-  }, [])
+
+    return () => {
+      device.unmount()
+      subscribtion.remove()
+    }
+  }, [device])
 
   return (
     <View style={styles.deviceContainer}>
-      <Text numberOfLines={1} style={styles.deviceNameText}>{name}</Text>
+      <Text numberOfLines={1} style={styles.deviceNameText}>
+        {name}
+      </Text>
       <View style={styles.toggleContainer}>
         <Text style={styles.toggleText}>{isOn ? 'On' : 'Off'}</Text>
         <Switch
@@ -36,10 +45,10 @@ function DeviceController({ device }) {
         />
       </View>
     </View>
-  );
+  )
 }
 
-export default DeviceController;
+export default DeviceController
 
 const styles = StyleSheet.create({
   deviceContainer: {
@@ -71,4 +80,4 @@ const styles = StyleSheet.create({
   toggleText: {
     color: '#798794',
   },
-});
+})
