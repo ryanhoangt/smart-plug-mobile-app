@@ -1,13 +1,8 @@
-import { StatusBar } from 'expo-status-bar';
 import { useContext, useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Row, Rows, Table } from 'react-native-table-component';
 import { Colors } from '../constants/colors';
-import { SENSORS } from '../data/sensors-data';
 import { UserDataContext } from '../store/user-data-context';
-import { BACKEND_HOST } from '@env';
-import axios from 'axios';
-import Sensor from '../model/sensor';
 import LoadingOverlay from '../components/UI/LoadingOverlay';
 import { getAllSensors } from '../services/user-data.service';
 

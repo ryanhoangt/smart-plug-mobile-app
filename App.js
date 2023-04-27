@@ -5,29 +5,26 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { AntDesign, Entypo } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
 
 // SCREENS
 import OnboardScreen from './screens/OnboardScreen';
 import LoginScreen from './screens/LoginScreen';
 import SignupScreen from './screens/SignupScreen';
 import HomeScreen from './screens/HomePage';
-import AutomationScreen from './screens/AutomationPage/AutomationScreen';
-import { ScenarioScreenOptions } from './screens/ScenarioPage/ScenarioScreen';
 import StatisticScreen from './screens/StatisticScreen';
 import ScenarioStack from './screens/ScenarioPage';
 import AutomationStack from './screens/AutomationPage/AutomationStack';
 import { AutomationScreenOptions } from './screens/AutomationPage/AutomationStack';
 import './ignoreWarnings';
+import {} from './services/mqtt.service'
 
 SplashScreen.preventAutoHideAsync()
   .then((_) => {})
   .catch(console.warn);
 import * as SplashScreen from 'expo-splash-screen';
-import { Image } from 'react-native';
 import { Colors } from './constants/colors';
 import AuthContextProvider, { AuthContext } from './store/auth-context';
-import UserDataContextProvider from './store/user-data-context';
 import { UserContextProvider } from './store/userContext';
 
 const Stack = createNativeStackNavigator();
@@ -43,7 +40,6 @@ function AuthStack() {
   return (
     <Stack.Navigator
       screenOptions={{
-        //
         headerShown: false,
       }}
     >
@@ -135,7 +131,7 @@ export default function App() {
     'be-vietnam': require('./assets/fonts/BeVietnamPro-Regular.ttf'),
     'be-vietnam-medium': require('./assets/fonts/BeVietnamPro-Medium.ttf'),
     'epilogue-700': require('./assets/fonts/Epilogue-SemiBold-700.ttf'),
-    Pacifico: require('./assets/fonts/Pacifico-Regular.ttf'),
+    'Pacifico': require('./assets/fonts/Pacifico-Regular.ttf'),
   });
 
   useEffect(() => {

@@ -1,8 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import {
   Alert,
-  Image,
-  Pressable,
   RefreshControl,
   ScrollView,
   StyleSheet,
@@ -11,13 +9,11 @@ import {
 } from 'react-native';
 import BottomSheet from 'reanimated-bottom-sheet';
 import { Colors } from '../../constants/colors';
-import { useContext, useEffect, useRef } from 'react';
+import { useContext, useRef } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AuthContext } from '../../store/auth-context';
 import AddNewButton from '../../components/UI/AddNewButton';
 import AddDeviceForm from '../../components/Home/AddDeviceForm';
-import { UserDataContext } from '../../store/user-data-context';
-import LoadingOverlay from '../../components/UI/LoadingOverlay';
 import { getAllDevices } from '../../services/device.service';
 import { getAllScenarios } from '../../services/scenario.service';
 import useFetch from '../../hooks/useFetchData';
@@ -99,6 +95,7 @@ const styles = StyleSheet.create({
     flexWrap: 1,
     justifyContent: 'space-between',
     gap: 12,
+    rowGap: 12
   },
   scenarioBtn: {
     backgroundColor: Colors.bluePrimary,
@@ -121,6 +118,7 @@ const styles = StyleSheet.create({
     color: 'rgba(30, 41, 51, 0.7)',
   },
   addDeviceInstructionText: {
+    marginVertical: 10,
     color: 'rgba(30, 41, 51, 0.5)',
     fontStyle: 'italic',
     fontWeight: '600',

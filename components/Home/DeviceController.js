@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { StyleSheet, Switch, Text, View } from 'react-native';
+import { useEffect, useState } from 'react';
+import { DeviceEventEmitter, StyleSheet, Switch, Text, View } from 'react-native';
 
 import { Colors } from '../../constants/colors';
 
@@ -8,8 +8,21 @@ function DeviceController({ device }) {
   const [isOn, setIsOn] = useState(state);
 
   const toggleSwitch = () => {
+    // device.toggleState()
+    device.setState(!isOn)
     setIsOn((prevState) => !prevState);
   };
+
+  useEffect(() => {
+    DeviceEventEmitter.addListener(topic, (message) => {
+      if (message === "1") {
+        setIsOn(true)
+      }
+      else {
+        setIsOn(false)
+      } 
+    })
+  }, [])
 
   return (
     <View style={styles.deviceContainer}>
@@ -42,6 +55,7 @@ const styles = StyleSheet.create({
     },
     shadowRadius: 6,
     shadowOpacity: 0.5,
+    marginBottom: 18,
   },
   toggleContainer: {
     flexDirection: 'row',

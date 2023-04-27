@@ -13,7 +13,6 @@ export const AuthContext = createContext({
 function AuthContextProvider({ children }) {
   const [authToken, setAuthToken] = useState();
   const [name, setName] = useState('')
-  const [axiosInstance, setAxiosInstance] = useState({});
 
   // Fetch saved token if exists
   useEffect(() => {
@@ -35,8 +34,6 @@ function AuthContextProvider({ children }) {
 
     async function checkExpirationAndSetTimeout() {
       const expiredAt = new Date(await AsyncStorage.getItem('expiredAt'));
-      //   console.log(authToken);
-      //   console.log(expiredAt);
       const curTime = new Date();
       if (expiredAt - curTime < 0) {
         onLogout();
@@ -52,21 +49,12 @@ function AuthContextProvider({ children }) {
     curTime.setHours(curTime.getHours() + 1);
     AsyncStorage.setItem('expiredAt', curTime.toString());
     AsyncStorage.setItem('token', token);
-
-    // Create axios instance
-    const instance = axios.create({
-      baseURL: 'http://dat2409.online/api',
-      timeout: 10000,
-      headers: { Authorization: 'Bearer ' + token },
-    });
-    setAxiosInstance(instance);
   }
 
   function onLogout() {
     setAuthToken(null);
     AsyncStorage.removeItem('token');
     AsyncStorage.removeItem('expiredAt');
-    setAxiosInstance({});
   }
 
   const value = {
@@ -74,7 +62,6 @@ function AuthContextProvider({ children }) {
     isAuthenticated: !!authToken,
     onSuccessAuth,
     onLogout,
-    axiosInstance,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
