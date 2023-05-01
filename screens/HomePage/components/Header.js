@@ -6,16 +6,15 @@ import { UserContext } from '../../../store/userContext';
 const avatarImg = require('../../../assets/images/avatar-placeholder.jpg');
 
 function Header() {
-  const {name} = useContext(UserContext)
   const timeString = useTimer();
-  const { onLogout } = useContext(AuthContext);
+  const { user, onLogout } = useContext(AuthContext);
 
   return (
     <View style={styles.welcomeHeading}>
       <View style={styles.headingTextContainer}>
         <Text style={{ color: '#9BA4B0' }}>{timeString}</Text>
         <Text style={[styles.welcomeText, { fontWeight: 800 }]}>
-          Welcome, {name}
+          Welcome, {user?.name}
         </Text>
       </View>
       <Pressable style={styles.avatarImg} onPress={() => onLogout()}>

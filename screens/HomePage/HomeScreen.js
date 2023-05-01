@@ -9,7 +9,7 @@ import {
 } from 'react-native'
 import BottomSheet from 'reanimated-bottom-sheet'
 import { Colors } from '../../constants/colors'
-import { useContext, useRef } from 'react'
+import { useContext, useEffect, useRef } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { AuthContext } from '../../store/auth-context'
 import AddNewButton from '../../components/UI/AddNewButton'
