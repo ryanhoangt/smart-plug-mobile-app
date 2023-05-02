@@ -22,7 +22,6 @@ function AuthContextProvider({ children }) {
       ])
 
       if (storedToken) {
-        console.log(userData)
         setAuthToken(storedToken)
         setUserInfo(JSON.parse(userData))
       }
