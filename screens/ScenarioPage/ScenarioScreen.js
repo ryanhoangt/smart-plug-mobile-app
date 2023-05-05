@@ -1,25 +1,28 @@
-import { StatusBar } from 'expo-status-bar';
-import { RefreshControl, ScrollView, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { defaultStyles } from '../../constants/defaultStyle';
-import AddNewButton from '../../components/UI/AddNewButton';
-import { useContext } from 'react';
-import LoadingOverlay from '../../components/UI/LoadingOverlay';
-import { getAllScenarios } from '../../services/user-data.service';
-import useFetch from '../../hooks/useFetchData';
-import { createInstance } from '../../services/axios.service';
-import { AuthContext } from '../../store/auth-context';
-import ScenarioList from '../../components/ScenarioList';
+import { StatusBar } from 'expo-status-bar'
+import { RefreshControl, ScrollView, StyleSheet } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { defaultStyles } from '../../constants/defaultStyle'
+import AddNewButton from '../../components/UI/AddNewButton'
+import { useContext } from 'react'
+import { getAllScenarios } from '../../services/user-data.service'
+import useFetch from '../../hooks/useFetchData'
+import { createInstance } from '../../services/axios.service'
+import { AuthContext } from '../../store/auth-context'
+import ScenarioList from '../../components/ScenarioList'
+import { useIsFocused } from '@react-navigation/native'
 
 function ScenarioScreen({ navigation }) {
   function handleAddScenario() {
-    navigation.navigate('New Scenario');
+    navigation.navigate('New Scenario')
   }
-  const { token } = useContext(AuthContext);
+  const { token } = useContext(AuthContext)
+  const isFocused = useIsFocused()
   const [scenarios, loading, fetchFunction] = useFetch(() => {
-    const instance = createInstance(token);
-    return getAllScenarios(instance);
-  });
+    if (isFocused) {
+      const instance = createInstance(token)
+      return getAllScenarios(instance)
+    }
+  }, [isFocused])
 
   return (
     <SafeAreaView
@@ -39,9 +42,9 @@ function ScenarioScreen({ navigation }) {
         />
       </ScrollView>
     </SafeAreaView>
-  );
+  )
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({})
 
-export default ScenarioScreen;
+export default ScenarioScreen

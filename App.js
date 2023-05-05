@@ -12,7 +12,7 @@ import OnboardScreen from './screens/OnboardScreen';
 import LoginScreen from './screens/LoginScreen';
 import SignupScreen from './screens/SignupScreen';
 import HomeScreen from './screens/HomePage';
-import StatisticScreen from './screens/StatisticScreen';
+import StatisticStack from './screens/StatisticPage';
 import ScenarioStack from './screens/ScenarioPage';
 import AutomationStack from './screens/AutomationPage/AutomationStack';
 import { AutomationScreenOptions } from './screens/AutomationPage/AutomationStack';
@@ -96,8 +96,9 @@ function AuthenticatedStack() {
       />
       <Tab.Screen
         name="Sensors"
-        component={StatisticScreen}
+        component={StatisticStack}
         options={{
+          headerShown: false,
           tabBarIcon: ({ focused, size, color }) => (
             <Entypo
               name="adjust"

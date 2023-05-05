@@ -1,12 +1,13 @@
 import { useContext } from 'react'
 import { RefreshControl, ScrollView, StyleSheet, Text } from 'react-native'
-import { getAllSensors } from '../services/sensor.service'
-import useFetch from '../hooks/useFetchData'
-import { AuthContext } from '../store/auth-context'
-import { createInstance } from '../services/axios.service'
-import SensorList from '../components/SensorList'
+import { getAllSensors } from '../../services/sensor.service'
+import useFetch from '../../hooks/useFetchData'
+import { AuthContext } from '../../store/auth-context'
+import { createInstance } from '../../services/axios.service'
+import SensorList from '../../components/SensorList'
+import AddNewButton from '../../components/UI/AddNewButton'
 
-function StatisticScreen() {
+function StatisticScreen({ navigation }) {
   const fields = ['name', 'type', 'value']
 
   const { token } = useContext(AuthContext)
@@ -15,6 +16,10 @@ function StatisticScreen() {
     const sensors = await getAllSensors(instance)
     return sensors
   })
+
+  function gotoAddSensorScreen() {
+    navigation.navigate('New Sensor')
+  }
 
   return (
     <ScrollView
@@ -28,6 +33,11 @@ function StatisticScreen() {
       </Text>
 
       <SensorList sensors={data} fields={fields} />
+      <AddNewButton
+        onBtnPress={gotoAddSensorScreen}
+        style={styles.addNewBtn}
+        btnText="Add new sensor"
+      />
     </ScrollView>
   )
 }
@@ -40,6 +50,12 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontSize: 13,
     marginBottom: 10,
+  },
+  addNewBtn: {
+    width: '100%',
+    marginHorizontal: 0,
+    marginTop: 20,
+    marginBottom: 20,
   },
 })
 
