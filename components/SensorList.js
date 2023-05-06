@@ -20,7 +20,7 @@ function SensorList({ sensors, fields }) {
 function TableHeader({ fields }) {
   const headerData = fields.map((field) => field.toUpperCase())
   return (
-    <Row style={styles.header} data={headerData} />
+    <Row textStyle={{}} style={styles.header} data={headerData} />
   )
 }
 

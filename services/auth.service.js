@@ -1,5 +1,7 @@
 const { default: axios } = require('axios')
-import { BACKEND_HOST } from '@env'
+import appConfig from '../configs/app.config'
+
+const BACKEND_HOST = appConfig.BACKEND_HOST
 
 async function login(email, password) {
   const endpoint = '/auth/login'
