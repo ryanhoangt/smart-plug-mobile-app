@@ -9,7 +9,7 @@ import {
 } from 'react-native'
 import BottomSheet from 'reanimated-bottom-sheet'
 import { Colors } from '../../constants/colors'
-import { useContext, useEffect, useRef } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { AuthContext } from '../../store/auth-context'
 import AddNewButton from '../../components/UI/AddNewButton'
@@ -22,6 +22,17 @@ import DeviceList from '../../components/DeviceList'
 import ScenarioList from '../../components/ScenarioList'
 import Header from './components/Header'
 import { UserContext } from '../../store/userContext'
+import { useDispatch, useSelector } from 'react-redux'
+import {
+  fetchDevices,
+  deviceSelector,
+  setAllDevices,
+} from '../../redux/features/deviceSlice'
+import {
+  fetchScenarios,
+  scenarioSelector,
+  setAllScenarios,
+} from '../../redux/features/scenarioSlice'
 
 function HomeScreen() {
   // HANDLERS
@@ -34,14 +45,7 @@ function HomeScreen() {
   const { id } = useContext(UserContext)
   const sheetRef = useRef(null)
 
-  const [data, loading, fetchFunction] = useFetch(() => {
-    try {
-      const instance = createInstance(token)
-      return Promise.all([getAllDevices(instance), getAllScenarios(instance)])
-    } catch (err) {
-      return Alert.alert('Something wrong happens')
-    }
-  })
+  const [loading, setLoading] = useState(false)
 
   function onFormCancel() {
     sheetRef.current.snapTo(2)
@@ -52,7 +56,7 @@ function HomeScreen() {
       <ScrollView
         style={styles.homeContainer}
         refreshControl={
-          <RefreshControl refreshing={loading} onRefresh={fetchFunction} />
+          <RefreshControl refreshing={loading} onRefresh={() => {}} />
         }
       >
         <StatusBar style="auto" />
@@ -60,7 +64,7 @@ function HomeScreen() {
         <View style={styles.sectionContainer}>
           <Text style={styles.sectionText}>Scenarios</Text>
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            <ScenarioList scenarios={data && data[1]} />
+            <ScenarioList />
           </ScrollView>
         </View>
         <View style={styles.devicesContainer}>
@@ -74,23 +78,23 @@ function HomeScreen() {
             onBtnPress={addNewDeviceHandler}
             btnText="Add New Device"
           />
-          <DeviceList devices={data && data[0]} />
+          <DeviceList />
         </View>
       </ScrollView>
-      <BottomSheet
+      {/* <BottomSheet
         ref={sheetRef}
         snapPoints={[600, 500, -100]}
         borderRadius={20}
         renderContent={() => (
           <AddDeviceForm
             onCancel={onFormCancel}
-            fetchDevicesAndScenarios={fetchFunction}
+            fetchDevicesAndScenarios={fetchData}
             token={token}
             userId={id}
           />
         )}
         initialSnap={2}
-      />
+      /> */}
     </SafeAreaView>
   )
 }

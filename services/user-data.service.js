@@ -1,21 +1,10 @@
 import appConfig from '../configs/app.config'
-import Device from '../model/device'
-import axios, { Axios } from 'axios'
+import axios from 'axios'
 import Scenario from '../model/scenario'
 import Sensor from '../model/sensor'
 import Automation from '../model/automation'
 
 const BACKEND_HOST = appConfig.BACKEND_HOST
-
-async function getAllDevices(instance) {
-  // const devicesUrl = BACKEND_HOST + `/users/${userId}/devices`;
-  // const { data: devicesData } = await axios.get(devicesUrl);
-  const { data: devicesData } = await instance.get('/devices')
-
-  return devicesData.metadata.devices.map(
-    (device) => new Device(device._id, device.name, device.state)
-  )
-}
 
 async function getAllScenarios(instance) {
   const { data: scerariosData } = await instance.get('/scenarios')
@@ -107,7 +96,6 @@ async function createNewSensor(
 }
 
 export {
-  getAllDevices,
   getAllScenarios,
   getAllSensors,
   getAllAutomations,
