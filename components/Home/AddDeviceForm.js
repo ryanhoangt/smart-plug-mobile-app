@@ -1,179 +1,114 @@
-import React, { Component } from 'react';
-import { Colors } from '../../constants/colors';
-import { Alert, StyleSheet, View, Text, TextInput } from 'react-native';
-import FlatButton from '../UI/FlatButton';
+import React, { Component, useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { Colors } from '../../constants/colors'
+import { Alert, StyleSheet, View, Text, TextInput } from 'react-native'
+import FlatButton from '../UI/FlatButton'
 
 import {
   createNewDevice,
   createNewSensor,
-} from '../../services/user-data.service';
+} from '../../services/user-data.service'
 
-import { Picker } from '@react-native-picker/picker';
+import { Picker } from '@react-native-picker/picker'
 
-export default class AddDeviceForm extends Component {
-  constructor(props) {
-    super(props);
+export default function AddDeviceForm({ onCancel }) {
+  const dispatch = useDispatch()
+  const [deviceName, setDeviceName] = useState('')
+  const [topic, setTopic] = useState('')
+  const [deviceType, setDeviceType] = useState('')
 
-    this.state = {
-      deviceType: undefined,
-      deviceName: '',
-      pinNumber: '',
-    };
+  const deviceTypeOptions = [
+    { label: 'Light Sensor', value: 'light' },
+    { label: 'Temperature Sensor', value: 'temperature' },
+    { label: 'Humidity Sensor', value: 'humidity' },
+    { label: 'Sound Sensor', value: 'sound' },
+    { label: 'Movement Sensor', value: 'movement' },
+    { label: 'Unknown Sensor', value: 'unknown' },
+    { label: 'Non-sensor Devices', value: 'non_ss' },
+  ]
 
-    this.onDropDownChange = (value) => {
-      this.setState({ ...this.state, deviceType: value });
-    };
-
-    this.onDeviceNameChange = (value) => {
-      this.setState({ ...this.state, deviceName: value });
-    };
-
-    this.onPinNumberChange = (value) => {
-      this.setState({ ...this.state, pinNumber: value });
-    };
-
-    this.onSubmit = this.onSubmit.bind(this);
+  const onCreateClicked = () => {
+    console.log(deviceName, deviceType, topic)
+    dispatch()
   }
-
-  async onSubmit() {
-    try {
-      if (this.state.deviceType === 'non_ss') {
-        await createNewDevice(
-          this.props.token,
-          this.props.userId,
-          this.state.deviceName,
-          this.state.pinNumber
-        );
-      } else {
-        await createNewSensor(
-          this.props.token,
-          this.props.userId,
-          this.state.deviceName,
-          this.state.deviceType,
-          this.state.pinNumber
-        );
-      }
-
-      // update data
-      await this.props.fetchDevicesAndScenarios();
-    } catch (err) {
-      console.log(err);
-      Alert.alert(
-        'Creation Failed',
-        'Could not create your new device. Please try again later.'
-      );
-    } finally {
-      this.props.onCancel();
-    }
-  }
-
-  render() {
-    return (
-      <View
-        style={{
-          backgroundColor: Colors.greenPrimary,
-          padding: 16,
-          height: 450,
-          margin: 10,
-          borderRadius: 40,
-          borderWidth: 4,
-          borderStyle: 'dashed',
-        }}
-      >
-        <View style={{ padding: 16 }}>
-          <Text
-            style={{
-              fontSize: 18,
-              fontFamily: 'open-sans-bold',
-              color: 'black',
-            }}
-          >
-            Device's name:
-          </Text>
-          <TextInput
-            value={this.state.deviceName}
-            onChangeText={this.onDeviceNameChange.bind(this)}
-            style={styles.textInput}
-          />
-        </View>
-
-        <View style={{ padding: 16, marginBottom: 30 }}>
-          <Text
-            style={{
-              fontSize: 18,
-              fontFamily: 'open-sans-bold',
-              color: 'black',
-            }}
-          >
-            Microbit's pin number:
-          </Text>
-          <TextInput
-            value={this.state.pinNumber}
-            onChangeText={this.onPinNumberChange.bind(this)}
-            style={styles.textInput}
-          />
-        </View>
-        <View
-          style={{
-            margin: 1,
-            marginBottom: -10,
-            padding: 16,
-            flexDirection: 'row',
-            // alignItems: 'flex-start',
-            height: 100,
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 18,
-              fontFamily: 'open-sans-bold',
-              color: 'black',
-              width: '100%',
-              flex: 0.4,
-            }}
-          >
-            Device's Type:
-          </Text>
-          <Picker
-            mode="dropdown"
-            style={{
-              width: undefined,
-              height: 40,
-              flex: 0.6,
-              marginTop: -85,
-              transform: [{ scaleX: 0.9 }, { scaleY: 0.9 }],
-            }}
-            placeholder="Select a type"
-            placeholderStyle={{ color: 'grey' }}
-            selectedValue={this.state.deviceType}
-            onValueChange={this.onDropDownChange.bind(this)}
-          >
-            <Picker.Item label="Light Sensor" value="Light" />
-            <Picker.Item label="Heat Sensor" value="Heat" />
-            <Picker.Item label="Humidity Sensor" value="Humidity" />
-            <Picker.Item label="Sound Sensor" value="Sound" />
-            <Picker.Item label="Movement Sensor" value="Movement" />
-            <Picker.Item label="Non-sensor Devices" value="non_ss" />
-          </Picker>
-        </View>
-
-        <View style={styles.buttons}>
-          <FlatButton
-            style={[styles.button, styles.flat]}
-            onPress={this.props.onCancel}
-          >
-            Cancel
-          </FlatButton>
-          <FlatButton style={styles.button} onPress={this.onSubmit}>
-            Create
-          </FlatButton>
-        </View>
+  return (
+    <View style={styles.container}>
+      <View style={styles.inputGroup}>
+        <Text style={styles.label}>Device's name:</Text>
+        <TextInput
+          value={deviceName}
+          onChangeText={setDeviceName}
+          style={styles.textInput}
+        />
       </View>
-    );
-  }
+
+      <View style={styles.inputGroup}>
+        <Text style={styles.label}>Device's topic:</Text>
+        <TextInput
+          value={topic}
+          onChangeText={setTopic}
+          style={styles.textInput}
+        />
+      </View>
+
+      <View style={[styles.flex, styles.inputGroup]}>
+        <Text style={[styles.label, { flex: 0.4 }]}>Device Type:</Text>
+        <Picker
+          style={styles.picker}
+          selectedValue={deviceType}
+          onValueChange={setDeviceType}
+        >
+          {deviceTypeOptions.map(({ label, value }) => (
+            <Picker.Item key={value} label={label} value={value} />
+          ))}
+        </Picker>
+      </View>
+
+      <View style={styles.buttons}>
+        <FlatButton style={[styles.button, styles.flat]} onPress={onCancel}>
+          Cancel
+        </FlatButton>
+        <FlatButton style={styles.button} onPress={onCreateClicked}>
+          Create
+        </FlatButton>
+      </View>
+    </View>
+  )
 }
 
+function DeviceTypePicker() {}
+
 const styles = StyleSheet.create({
+  container: {
+    backgroundColor: Colors.greenPrimary,
+    padding: 16,
+    height: 450,
+    margin: 10,
+    borderRadius: 40,
+    borderWidth: 4,
+    borderStyle: 'dashed',
+  },
+  flex: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    height: 100,
+  },
+  label: {
+    fontSize: 18,
+    fontFamily: 'open-sans-bold',
+    color: 'black',
+  },
+  inputGroup: {
+    padding: 16,
+    // marginTop: 16,
+  },
+  picker: {
+    height: 40,
+    flex: 0.6,
+    marginTop: -85,
+    transform: [{ scaleX: 0.9 }, { scaleY: 0.9 }],
+  },
   buttons: {
     marginTop: 40,
     flexDirection: 'row',
@@ -197,95 +132,4 @@ const styles = StyleSheet.create({
     fontSize: 18,
     backgroundColor: 'white',
   },
-});
-
-// render() {
-//     return (
-//       <Container>
-//         <Form
-//           style={{
-//             backgroundColor: Colors.greenPrimary,
-//             padding: 16,
-//             height: 450,
-//             margin: 10,
-//             borderRadius: 40,
-//             borderWidth: 4,
-//             borderStyle: 'dashed',
-//           }}
-//         >
-//           <Item floatingLabel style={{ margin: 10, padding: 16 }}>
-//             <Label
-//               style={{
-//                 fontSize: 18,
-//                 fontFamily: 'open-sans-bold',
-//                 color: 'black',
-//               }}
-//             >
-//               Device's name:
-//             </Label>
-//             <Input
-//               value={this.state.deviceName}
-//               onChangeText={this.onDeviceNameChange.bind(this)}
-//             />
-//           </Item>
-
-//           <Item floatingLabel style={{ margin: 10, padding: 16 }}>
-//             <Label
-//               style={{
-//                 fontSize: 18,
-//                 fontFamily: 'open-sans-bold',
-//                 color: 'black',
-//               }}
-//             >
-//               Microbit's pin number:
-//             </Label>
-//             <Input
-//               value={this.state.pinNumber}
-//               onChangeText={this.onPinNumberChange.bind(this)}
-//             />
-//           </Item>
-//           <Item picker style={{ margin: 15, padding: 16, flexWrap: 'wrap' }}>
-//             <Label
-//               style={{
-//                 fontSize: 18,
-//                 fontFamily: 'open-sans-bold',
-//                 color: 'black',
-//                 width: '100%',
-//               }}
-//             >
-//               Device's Type:
-//             </Label>
-//             <Picker
-//               mode="dropdown"
-//               style={{ width: undefined }}
-//               placeholder="Select a type"
-//               placeholderStyle={{ color: 'grey' }}
-//               selectedValue={this.state.deviceType}
-//               onValueChange={this.onDropDownChange.bind(this)}
-//             >
-//               <Picker.Item label="Light Sensor" value="light_ss" />
-//               <Picker.Item
-//                 label="Temperature / Humidity Sensor"
-//                 value="temp/humid_ss"
-//               />
-//               <Picker.Item label="Sound" value="sound_ss" />
-//               <Picker.Item label="Movement" value="movement_ss" />
-//               <Picker.Item label="Non-sensor Devices" value="non_ss" />
-//             </Picker>
-//           </Item>
-
-//           <View style={styles.buttons}>
-//             <FlatButton
-//               style={[styles.button, styles.flat]}
-//               onPress={this.props.onCancel}
-//             >
-//               Cancel
-//             </FlatButton>
-//             <FlatButton style={styles.button} onPress={this.onSubmit}>
-//               Create
-//             </FlatButton>
-//           </View>
-//         </Form>
-//       </Container>
-//     );
-//   }
+})

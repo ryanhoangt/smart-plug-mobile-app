@@ -4,7 +4,14 @@ class MQTTCLient {
   static #instance
 
   constructor() {
-    console.log('This constructor is private. Try MQTT.getInstance() instead')
+    const instance = createMQTTClient()
+    instance.on('connect', () => {
+      console.log('Connected to adafruit.io')
+    })
+    instance.on('error', () => {
+      console.log('Failed to connect adafruit.io')
+    })
+    return instance
   }
 
   static createMQTTInstance() {
@@ -20,7 +27,7 @@ class MQTTCLient {
 
   static getInstance() {
     if (!MQTTCLient.#instance) {
-      MQTTCLient.#instance = MQTTCLient.createMQTTInstance()
+      MQTTCLient.#instance = new MQTTCLient()
     }
 
     return MQTTCLient.#instance

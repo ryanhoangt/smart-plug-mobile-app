@@ -36,29 +36,14 @@ import {
 
 function HomeScreen() {
   // HANDLERS
-  function addNewDeviceHandler() {
-    sheetRef.current.snapTo(0)
-  }
-
-  // CONTEXTS, STATES, REFS
-  const { token } = useContext(AuthContext)
-  const { id } = useContext(UserContext)
   const sheetRef = useRef(null)
 
-  const [loading, setLoading] = useState(false)
-
-  function onFormCancel() {
-    sheetRef.current.snapTo(2)
-  }
+  const onAddDeviceClicked = () => sheetRef.current.snapTo(0)
+  const onFormCancel = () => sheetRef.current.snapTo(2)
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <ScrollView
-        style={styles.homeContainer}
-        refreshControl={
-          <RefreshControl refreshing={loading} onRefresh={() => {}} />
-        }
-      >
+      <ScrollView style={styles.homeContainer}>
         <StatusBar style="auto" />
         <Header />
         <View style={styles.sectionContainer}>
@@ -75,26 +60,19 @@ function HomeScreen() {
           </Text>
           <AddNewButton
             style={styles.addNewBtn}
-            onBtnPress={addNewDeviceHandler}
+            onBtnPress={onAddDeviceClicked}
             btnText="Add New Device"
           />
           <DeviceList />
         </View>
       </ScrollView>
-      {/* <BottomSheet
+      <BottomSheet
         ref={sheetRef}
-        snapPoints={[600, 500, -100]}
+        snapPoints={[500, 400, -100]}
         borderRadius={20}
-        renderContent={() => (
-          <AddDeviceForm
-            onCancel={onFormCancel}
-            fetchDevicesAndScenarios={fetchData}
-            token={token}
-            userId={id}
-          />
-        )}
+        renderContent={() => <AddDeviceForm onCancel={onFormCancel} />}
         initialSnap={2}
-      /> */}
+      />
     </SafeAreaView>
   )
 }

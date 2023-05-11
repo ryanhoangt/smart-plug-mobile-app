@@ -17,7 +17,6 @@ import ScenarioStack from './screens/ScenarioPage'
 import AutomationStack from './screens/AutomationPage/AutomationStack'
 import { AutomationScreenOptions } from './screens/AutomationPage/AutomationStack'
 import './ignoreWarnings'
-import { createMQTTClient } from './services/mqtt.service'
 
 SplashScreen.preventAutoHideAsync()
   .then((_) => {})
@@ -40,6 +39,7 @@ import {
 import MQTTCLient from './model/MQTTClient'
 import { Alert } from 'react-native'
 import LoadingOverlay from './components/UI/LoadingOverlay'
+import { fetchSensors, updateSensorValue } from './redux/features/sensorSlice'
 
 const Stack = createNativeStackNavigator()
 const Tab = createBottomTabNavigator()
@@ -66,36 +66,48 @@ function AuthStack() {
 
 function AuthenticatedStack() {
   // Establish MQTT connection
-  const mqttClient = MQTTCLient.getInstance()
   const { token } = useContext(AuthContext)
   const dispatch = useDispatch()
-  const [loading, setLoading] = useState(!mqttClient.connected)
+  const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-
-  mqttClient.on('connect', () => {
-    setLoading(false)
-    setError(null)
-  })
-  mqttClient.on('error', (err) => {
-    setLoading(true)
-    setError(err.message)
-  })
-  mqttClient.on('message', (topic, message) => {
-    console.log('message')
-    dispatch(updateState({ topic, message: message.toString() }))
-  })
+  const [adafruitConnected, setAdafruitConnected] = useState(false)
 
   useEffect(() => {
-    dispatch(fetchDevices(token))
-    dispatch(fetchScenarios(token))
-  }, [dispatch, token])
+    if (!adafruitConnected) {
+      const mqttClient = MQTTCLient.getInstance()
+      mqttClient.on('message', (topic, message) => {
+        dispatch(updateState({ topic, message: message.toString() }))
+        dispatch(updateSensorValue({ topic, value: message.toString() }))
+      })
+      mqttClient.on('connect', () => {
+        console.log('Connected to adafruit.io')
+        setAdafruitConnected(true)
+        setLoading(false)
+        setError(null)
+      })
+      mqttClient.on('error', (err) => {
+        console.log('Failed to connect adafruit.io')
+        setAdafruitConnected(false)
+        setLoading(true)
+        setError(err.message)
+      })
+    }
+  }, [adafruitConnected])
+
+  useEffect(() => {
+    if (adafruitConnected) {
+      dispatch(fetchDevices(token))
+      dispatch(fetchScenarios(token))
+      dispatch(fetchSensors(token))
+    }
+  }, [dispatch, token, adafruitConnected])
 
   if (error) return Alert.alert(error)
 
   if (loading) return <LoadingOverlay />
 
   return (
-    !loading && (
+    adafruitConnected && (
       <Tab.Navigator>
         <Tab.Screen
           options={{

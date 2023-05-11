@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, isPending } from '@reduxjs/toolkit'
 import { createInstance } from '../../services/axios.service'
-import { createMQTTClient, getAdafruitKey } from '../../services/mqtt.service'
+import { getAdafruitKey } from '../../services/mqtt.service'
 import MQTTCLient from '../../model/MQTTClient'
 
 const initialState = {
@@ -67,7 +67,10 @@ export const fetchDevices = createAsyncThunk(
       const mqttClient = MQTTCLient.getInstance()
       devices.forEach(({ topic }) =>
         mqttClient.subscribe(getAdafruitKey(topic), (err) => {
-          if (err) thunkAPI.rejectWithValue('Failed to subscribe ' + topic)
+          if (err) {
+            thunkAPI.rejectWithValue('Failed to subscribe ' + topic)
+            return
+          }
 
           console.log('Subscribed to ' + topic)
         })

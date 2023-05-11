@@ -7,7 +7,7 @@ import {
   DEV_ADAFRUIT_USER,
   DEV_ADAFRUIT_KEY,
   DEV_ADAFRUIT_TOPIC_PREFIX,
-  NODE_ENV
+  NODE_ENV,
 } from '@env'
 
 const configs = {
@@ -25,6 +25,7 @@ const configs = {
   },
 }
 
-const env = NODE_ENV == "pro" ? "pro" : "dev"
+const env = NODE_ENV == 'pro' ? 'pro' : 'dev'
+console.log(env)
 console.log(configs[env])
 export default configs[env]

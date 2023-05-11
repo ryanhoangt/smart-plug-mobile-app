@@ -5,32 +5,42 @@ import {
   TextInput,
   StyleSheet,
   View,
-  Button,
   Pressable,
   Alert,
 } from 'react-native'
 import { defaultStyles } from '../../constants/defaultStyle'
 import { Colors } from '../../constants/colors'
 import SelectDropdown from 'react-native-select-dropdown'
-import { createSensor } from '../../services/sensor.service'
 import { AuthContext } from '../../store/auth-context'
+import { useDispatch, useSelector } from 'react-redux'
+import { createSensor } from '../../redux/features/sensorSlice'
+import LoadingOverlay from '../../components/UI/LoadingOverlay'
 
 function AddSensorScreen({ navigation }) {
   const [name, onChangeName] = useState('')
   const [topic, onChangeTopic] = useState('')
   const [type, setType] = useState('unknown')
   const { token } = useContext(AuthContext)
+  const dispatch = useDispatch()
+  const { loading } = useSelector((state) => state.sensors)
 
-  function handleCreateSensor() {
-    createSensor(token, name, topic, type)
-      .then(() => {
-        setTimeout(() => {
-          navigation.navigate('Statistics')
-        }, 1000)
-        return Alert.alert('Create sensor successfull')
-      })
-      .catch((err) => console.error(err.message))
+  async function handleCreateSensor() {
+    const sensorData = { name, topic, type_sensor: type }
+    const res = await dispatch(createSensor({ token, sensor: sensorData }))
+
+    const status = res.meta.requestStatus
+    if (status == 'rejected') {
+      // setError('There is an error in creating sensor')
+      // return Alert.alert('There is an error in creating sensor')
+    } else if (status == 'fulfilled') {
+      setTimeout(() => {
+        navigation.navigate('Statistics')
+      }, 1000)
+      return Alert.alert('Create sensor successfully')
+    }
   }
+
+  if (loading) return <LoadingOverlay />
 
   return (
     <ScrollView style={defaultStyles.container}>
@@ -51,7 +61,7 @@ function AddSensorScreen({ navigation }) {
           defaultButtonText="Select sensor type"
           buttonStyle={styles.dropdownInput}
           data={['Temperature', 'Humidity', 'Light', 'Unknown']}
-          onSelect={(selectedItem, index) => {
+          onSelect={(selectedItem) => {
             setType(selectedItem.toLowerCase())
           }}
         />
