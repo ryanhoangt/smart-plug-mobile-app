@@ -12,7 +12,6 @@ async function getAllAutomations(instance) {
 async function getAutomation(id, access_token) {
   const instance = createInstance(access_token);
   const { data } = await instance.get(`/automations/${id}`);
-  console.log(data.metadata);
   const { _id, name, actions, repeats, time, user } = data.metadata;
   return new Automation(_id, name, actions, time, repeats, user);
 }

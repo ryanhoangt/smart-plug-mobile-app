@@ -1,12 +1,21 @@
-import Scenario from '../model/scenario';
+import Scenario from '../model/scenario'
 
 async function getAllScenarios(instance) {
-  const { data } = await instance.get('/scenarios');
+  const { data } = await instance.get('/scenarios')
 
-  return data.metadata.scenarios.map(
-    ({ _id, name, actions, isFavorite, user }) =>
-      new Scenario(_id, name, isFavorite, actions, user)
-  );
+  return data.metadata.scenarios
+  // return data.metadata.scenarios.map(
+  //   ({ _id, name, actions, isFavorite, user }) =>
+  //     new Scenario(_id, name, isFavorite, actions, user)
+  // )
 }
 
-export { getAllScenarios };
+async function saveScenario(instance, name, actions) {
+  return instance.post('/scenarios', { name, actions })
+}
+
+async function activateScenario(instane, sceneId) {
+  await instane.post(`/scenarios/${sceneId}/activate`, {})
+}
+
+export { getAllScenarios, saveScenario, activateScenario }

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState } from 'react'
 import {
   View,
   Text,
@@ -6,56 +6,56 @@ import {
   TouchableOpacity,
   StyleSheet,
   Alert,
-} from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
-import LoadingOverlay from '../components/UI/LoadingOverlay';
-import { AuthContext } from '../store/auth-context';
-import { register } from '../services/auth.service';
-import useShowPassword from '../hooks/useShowPassword';
+} from 'react-native'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { useNavigation } from '@react-navigation/native'
+import LoadingOverlay from '../components/UI/LoadingOverlay'
+import { AuthContext } from '../store/auth-context'
+import { register } from '../services/auth.service'
+import useShowPassword from '../hooks/useShowPassword'
 // import { UserDataContext } from '../store/user-data-context';
-import { UserContext } from '../store/userContext';
+import { UserContext } from '../store/userContext'
 
 const SignupScreen = () => {
   // HANDLERS
   const getLoginHandler = () => {
-    navigation.replace('Login');
-  };
+    navigation.replace('Login')
+  }
   const signupSubmitHandler = async () => {
     if (!email.includes('@') || !(password.length >= 7) || !(name.length > 0)) {
       return Alert.alert(
         'Invalid input',
         'Please check your entered information.'
-      );
+      )
     }
 
-    setIsAuthenticating(true);
+    setIsAuthenticating(true)
     try {
-      const { id, token } = await register(name, email, password);
-      authCtx.onSuccessAuth(token);
-      userDataCtx.onSuccessAuth(id, name, email);
+      const { id, token } = await register(name, email, password)
+      authCtx.onSuccessAuth(token, { id, name, email })
+      userDataCtx.onSuccessAuth(id, name, email)
     } catch (err) {
       console.log(err)
       Alert.alert(
         'Authentication failed',
         'Could not sign up. Please check your credentials or try again later.'
-      );
-      setIsAuthenticating(false);
+      )
+      setIsAuthenticating(false)
     }
-  };
+  }
 
   // STATES
-  const navigation = useNavigation();
-  const authCtx = useContext(AuthContext);
-  const userDataCtx = useContext(UserContext);
-  const [passwordVisibility, togglePasswordVisibility] = useShowPassword();
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [isAuthenticating, setIsAuthenticating] = useState(false);
+  const navigation = useNavigation()
+  const authCtx = useContext(AuthContext)
+  const userDataCtx = useContext(UserContext)
+  const [passwordVisibility, togglePasswordVisibility] = useShowPassword()
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [isAuthenticating, setIsAuthenticating] = useState(false)
 
   if (isAuthenticating) {
-    return <LoadingOverlay message="Signing up..." />;
+    return <LoadingOverlay message="Signing up..." />
   }
 
   return (
@@ -105,8 +105,8 @@ const SignupScreen = () => {
         <Text style={styles.alreadyButtonText}>Already have an account ?</Text>
       </TouchableOpacity>
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -184,5 +184,5 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'white',
   },
-});
-export default SignupScreen;
+})
+export default SignupScreen

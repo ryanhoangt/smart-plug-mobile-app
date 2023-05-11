@@ -1,4 +1,4 @@
-import { createMQTTClient, getAdafruitKey } from "../services/mqtt.service"
+import { createMQTTClient, getAdafruitKey } from '../services/mqtt.service'
 import { DeviceEventEmitter } from 'react-native'
 
 class Accessory {
@@ -13,7 +13,7 @@ class Accessory {
     this.mqttClient = createMQTTClient()
     this.mqttClient.on('connect', this.onConnect.bind(this))
     this.mqttClient.on('message', this.onMessage.bind(this))
-    this.mqttClient.on("error", (error) => console.log(error.message))
+    this.mqttClient.on('error', (error) => console.log(error.message))
   }
 
   onConnect() {
@@ -31,9 +31,8 @@ class Accessory {
   }
 
   unmount() {
-    // this.mqttClient.end()
+    this.mqttClient.end()
   }
 }
-
 
 export default Accessory

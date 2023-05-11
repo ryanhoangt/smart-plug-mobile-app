@@ -8,28 +8,16 @@ import {
 } from 'react-native'
 
 import { Colors } from '../../constants/colors'
+import { useDispatch } from 'react-redux'
+import { setState } from '../../redux/features/deviceSlice'
 
 function DeviceController({ device }) {
-  const { id, name, state, topic } = device
-  const [isOn, setIsOn] = useState(state)
+  const dispatch = useDispatch()
+  const { _id, name, state, topic } = device
 
   const toggleSwitch = () => {
-    // device.toggleState()
-    device.setState(!isOn)
-    setIsOn((prevState) => !prevState)
+    dispatch(setState({ deviceId: _id, value: !state }))
   }
-
-  useEffect(() => {
-    device.mount()
-    let subscribtion = DeviceEventEmitter.addListener(topic, (message) => {
-      setIsOn(message === '1')
-    })
-
-    return () => {
-      device.unmount()
-      subscribtion.remove()
-    }
-  }, [device])
 
   return (
     <View style={styles.deviceContainer}>
@@ -37,10 +25,10 @@ function DeviceController({ device }) {
         {name}
       </Text>
       <View style={styles.toggleContainer}>
-        <Text style={styles.toggleText}>{isOn ? 'On' : 'Off'}</Text>
+        <Text style={styles.toggleText}>{state ? 'On' : 'Off'}</Text>
         <Switch
           onValueChange={toggleSwitch}
-          value={isOn}
+          value={state}
           trackColor={{ true: Colors.orangePrimary }}
         />
       </View>

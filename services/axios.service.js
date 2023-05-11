@@ -1,12 +1,12 @@
-import axios from 'axios';
-import { BACKEND_HOST } from '@env';
+import axios from 'axios'
+import appConfig from '../configs/app.config'
 
 function createInstance(token) {
   return axios.create({
-    baseURL: BACKEND_HOST,
+    baseURL: appConfig.BACKEND_HOST,
     timeout: 10000,
     headers: { Authorization: 'Bearer ' + token },
-  });
+  })
 }
 
-export { createInstance };
+export { createInstance }

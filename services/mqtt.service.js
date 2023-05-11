@@ -1,6 +1,7 @@
 import mqtt from 'precompiled-mqtt'
-import { ADAFRUIT_USER, ADAFRUIT_KEY, ADAFRUIT_TOPIC_PREFIX } from '@env'
+import appConfig from '../configs/app.config'
 
+const { ADAFRUIT_USER, ADAFRUIT_KEY, ADAFRUIT_TOPIC_PREFIX } = appConfig
 function createMQTTClient() {
   const URL = 'mqtts://io.adafruit.com/'
   return mqtt.connect(URL, {

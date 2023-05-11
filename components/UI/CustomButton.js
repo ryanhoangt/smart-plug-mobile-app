@@ -1,6 +1,6 @@
-import { Pressable, StyleSheet, Switch, Text, View } from 'react-native';
-import React from 'react';
-import { Colors } from '../../constants/colors';
+import { Pressable, StyleSheet, Switch, Text, View } from 'react-native'
+import React from 'react'
+import { Colors } from '../../constants/colors'
 
 export default function CustomButton({
   title,
@@ -9,6 +9,7 @@ export default function CustomButton({
   primary,
   value,
   onValueChange,
+  onPress,
 }) {
   return (
     <Pressable
@@ -16,7 +17,9 @@ export default function CustomButton({
         styles.btnContainer,
         first ? styles.first : undefined,
         last ? styles.last : undefined,
-      ]}>
+      ]}
+      onPress={onPress}
+    >
       <Text style={[styles.text, primary ? styles.primary : undefined]}>
         {title}
       </Text>
@@ -24,11 +27,11 @@ export default function CustomButton({
         <Switch
           value={value}
           onValueChange={onValueChange}
-          trackColor={{true: Colors.orangePrimary}}
+          trackColor={{ true: Colors.orangePrimary }}
         />
       )}
     </Pressable>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -60,4 +63,4 @@ const styles = StyleSheet.create({
   primary: {
     color: Colors.orangePrimary,
   },
-});
+})
