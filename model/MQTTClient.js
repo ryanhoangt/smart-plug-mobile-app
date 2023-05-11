@@ -6,21 +6,13 @@ class MQTTCLient {
   constructor() {
     const instance = createMQTTClient()
     instance.on('connect', () => {
-      console.log('Connected to adafruit.io')
+      console.log('Connected to adafruit.io in class')
     })
     instance.on('error', () => {
       console.log('Failed to connect adafruit.io')
     })
-    return instance
-  }
-
-  static createMQTTInstance() {
-    const instance = createMQTTClient()
-    instance.on('connect', () => {
-      console.log('Connected to adafruit.io')
-    })
-    instance.on('error', () => {
-      console.log('Failed to connect adafruit.io')
+    instance.on('reconnect', () => {
+      console.log('Connect failed, reconecting')
     })
     return instance
   }
