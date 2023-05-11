@@ -25,6 +25,17 @@ class LightSensor extends Sensor {
   }
 }
 
+class MovementSensor extends Sensor {
+  constructor(id, name, value, topic, user) {
+    super(id, name, value, topic, user)
+    this.type = 'movement'
+  }
+
+  get value() {
+    return this._value == 1 ? 'movement detected' : 'no movement'
+  }
+}
+
 class TemperatureSensor extends Sensor {
   constructor(id, name, value, topic, user) {
     super(id, name, value, topic, user)
@@ -44,6 +55,17 @@ class HumiditySensor extends Sensor {
 
   get value() {
     return this._value + 'g/m³'
+  }
+}
+
+class DistanceSensor extends Sensor {
+  constructor(id, name, value, topic, user) {
+    super(id, name, value, topic, user)
+    this.type = 'distance'
+  }
+
+  get value() {
+    return this._value + 'cm'
   }
 }
 
@@ -69,6 +91,12 @@ export class SensorFactory {
 
       case 'light':
         return new LightSensor(id, name, value, topic, user)
+
+      case 'movement':
+        return new MovementSensor(id, name, value, topic, user)
+
+      case 'distance':
+        return new DistanceSensor(id, name, value, topic, user)
 
       default:
         return new UnknownSensor(id, name, value, topic, user)

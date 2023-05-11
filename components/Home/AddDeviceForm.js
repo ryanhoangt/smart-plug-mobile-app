@@ -25,8 +25,8 @@ export default function AddDeviceForm({ onCancel }) {
     { label: 'Light Sensor', value: 'light' },
     { label: 'Temperature Sensor', value: 'temperature' },
     { label: 'Humidity Sensor', value: 'humidity' },
-    { label: 'Sound Sensor', value: 'sound' },
     { label: 'Movement Sensor', value: 'movement' },
+    { label: 'Distance Sensor', value: 'distance' },
     { label: 'Unknown Sensor', value: 'unknown' },
     { label: 'Non-sensor Devices', value: 'non_ss' },
   ]
