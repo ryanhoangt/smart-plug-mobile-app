@@ -1,6 +1,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { createInstance } from '../../services/axios.service'
-import axios from 'axios'
+
+const isActionPending = (action) =>
+  action.type.startsWith('scenarios') && action.type.endsWith('/pending')
+const isActionRejected = (action) =>
+  action.type.startsWith('scenarios') && action.type.endsWith('/rejected')
 
 const initialState = {
   scenarios: [],
@@ -14,18 +18,23 @@ const scenarioSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchScenarios.pending, (state) => {
-        state.loading = true
-        state.error = null
-      })
       .addCase(fetchScenarios.fulfilled, (state, action) => {
         state.loading = false
         state.scenarios = action.payload
         state.error = null
       })
-      .addCase(fetchScenarios.rejected, (state, action) => {
+      .addCase(createScenario.fulfilled, (state, action) => {
+        state.loading = false
+        state.scenarios = [...state.scenarios, action.payload]
+        state.error = null
+      })
+      .addMatcher(isActionRejected, (state, action) => {
         state.loading = false
         state.error = action.payload
+      })
+      .addMatcher(isActionPending, (state, action) => {
+        state.loading = true
+        state.error = null
       })
   },
 })
@@ -40,6 +49,21 @@ export const fetchScenarios = createAsyncThunk(
       return data.metadata.scenarios
     } catch (error) {
       return thunkAPI.rejectWithValue('There is an error in fetching scenarios')
+    }
+  }
+)
+
+export const createScenario = createAsyncThunk(
+  'scenarios/createScenario',
+  async ({ token, scenario }) => {
+    try {
+      const instance = createInstance(token)
+      const { data } = await instance.post('/scenarios', scenario)
+      const newScenario = data.metadata
+
+      return newScenario
+    } catch (error) {
+      return thunkAPI.rejectWithValue('There is an error in creating scenario')
     }
   }
 )

@@ -10,13 +10,13 @@ function DevicePickerModal({
   onClose,
 }) {
   const pushToList = (device) => {
-    if (!pickedDevices.some((picked) => picked.id == device.id)) {
+    if (!pickedDevices.some((picked) => picked._id == device._id)) {
       setPickedDevices([...pickedDevices, device])
     }
   }
 
   const removeFromList = (device) => {
-    setPickedDevices(pickedDevices.filter((picked) => picked.id != device.id))
+    setPickedDevices(pickedDevices.filter((picked) => picked.id != device._id))
   }
 
   const onScrollHandler = (event) => {
@@ -35,7 +35,7 @@ function DevicePickerModal({
       >
         {devices.map((device) => (
           <DeviceItem
-            key={device.id}
+            key={device._id}
             device={device}
             pushToList={pushToList}
             removeFromList={removeFromList}

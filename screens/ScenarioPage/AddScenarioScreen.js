@@ -20,36 +20,33 @@ import { Colors } from '../../constants/colors'
 import { AuthContext } from '../../store/auth-context'
 import { createInstance } from '../../services/axios.service'
 import { saveScenario } from '../../services/scenario.service'
+import { useDispatch, useSelector } from 'react-redux'
+import { createScenario } from '../../redux/features/scenarioSlice'
 
 export default function AddScenarioScreen({ navigation }) {
-  const {token} = useContext(AuthContext)
+  const { token } = useContext(AuthContext)
   const [name, setName] = useState('')
   const [pickedDevices, setPickedDevices] = useState([])
   const sheetRef = useRef(null)
-  const [devices, loading] = useFetch((instance) => {
-    return getAllDevices(instance)
-  })
+  const { devices } = useSelector((state) => state.devices)
+  const dispatch = useDispatch()
 
-  const openDevicePicker = () => {
-    sheetRef.current.snapTo(0)
-  }
-
-  const closeDevicePicker = () => {
-    sheetRef.current.snapTo(2)
-  }
+  const openDevicePicker = () => sheetRef.current.snapTo(0)
+  const closeDevicePicker = () => sheetRef.current.snapTo(2)
 
   const onSaveBtnClick = () => {
     const instance = createInstance(token)
-    const actions = pickedDevices.map(({ id, state }) => ({
-      device: id,
+    const actions = pickedDevices.map(({ _id, state }) => ({
+      device: _id,
       state,
     }))
-    saveScenario(instance, name, actions)
+    dispatch(createScenario({ token, scenario: { name, actions } }))
+      .unwrap()
       .then(() => {
         setTimeout(() => {
           navigation.navigate('All Scenarios')
         }, 2000)
-        return Alert.alert("Add scenario successfully")
+        return Alert.alert('Add scenario successfully')
       })
       .catch((err) => console.error(err))
   }
@@ -67,7 +64,7 @@ export default function AddScenarioScreen({ navigation }) {
           <Text style={defaultStyles.sectionTitle}>Accessories</Text>
           <View style={styles.deviceList}>
             {pickedDevices.map((device) => (
-              <PickedDevice key={device.id} device={device} />
+              <PickedDevice key={device._id} device={device} />
             ))}
           </View>
         </View>

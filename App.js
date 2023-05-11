@@ -73,6 +73,7 @@ function AuthenticatedStack() {
   const [error, setError] = useState(null)
 
   useEffect(() => {
+    console.log('code inside useeffect')
     mqttClient.on('connect', () => {
       setLoading(false)
       setError(null)
@@ -80,9 +81,6 @@ function AuthenticatedStack() {
     mqttClient.on('error', (err) => {
       setLoading(true)
       setError(err.message)
-    })
-    mqttClient.on('message', (topic, message) => {
-      dispatch(updateState({ topic, message: message.toString() }))
     })
   }, [])
 

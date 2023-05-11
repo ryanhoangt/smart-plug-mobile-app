@@ -1,40 +1,31 @@
-import { useContext } from 'react'
-import { RefreshControl, ScrollView, StyleSheet, Text } from 'react-native'
-import { getAllSensors } from '../../services/sensor.service'
-import useFetch from '../../hooks/useFetchData'
-import { AuthContext } from '../../store/auth-context'
-import { createInstance } from '../../services/axios.service'
-import SensorList from '../../components/SensorList'
+import { ScrollView, StyleSheet, Text } from 'react-native'
 import AddNewButton from '../../components/UI/AddNewButton'
+import SensorTable from '../../components/SensorTable'
+import { useDispatch } from 'react-redux'
+import { useContext, useEffect } from 'react'
+import { AuthContext } from '../../store/auth-context'
+import { fetchSensors } from '../../redux/features/sensorSlice'
 
 function StatisticScreen({ navigation }) {
-  const fields = ['name', 'type', 'value']
-
+  const dispatch = useDispatch()
   const { token } = useContext(AuthContext)
-  const [data, loading, fetchFunction] = useFetch(async () => {
-    const instance = createInstance(token)
-    const sensors = await getAllSensors(instance)
-    return sensors
-  })
 
-  function gotoAddSensorScreen() {
-    navigation.navigate('New Sensor')
-  }
+  useEffect(() => {
+    dispatch(fetchSensors(token))
+  }, [dispatch, token])
+
+  const onAddBtnClicked = () => navigation.navigate('New Sensor')
 
   return (
-    <ScrollView
-      style={styles.container}
-      refreshControl={
-        <RefreshControl refreshing={loading} onRefresh={fetchFunction} />
-      }
-    >
+    <ScrollView style={styles.container}>
       <Text style={styles.instructionText}>
         To add a new sensor, please manually connect it to the central server.
       </Text>
 
-      <SensorList sensors={data} fields={fields} />
+      <SensorTable />
+
       <AddNewButton
-        onBtnPress={gotoAddSensorScreen}
+        onBtnPress={onAddBtnClicked}
         style={styles.addNewBtn}
         btnText="Add new sensor"
       />

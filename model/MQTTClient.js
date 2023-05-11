@@ -21,6 +21,7 @@ class MQTTCLient {
   static getInstance() {
     if (!MQTTCLient.#instance) {
       MQTTCLient.#instance = MQTTCLient.createMQTTInstance()
+      return MQTTCLient.#instance
     }
 
     return MQTTCLient.#instance

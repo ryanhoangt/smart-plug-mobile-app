@@ -8,8 +8,6 @@ function ScenarioList() {
 
   if (error) return Alert.alert('Error in fetching scenarios')
 
-  if (loading) return <LoadingOverlay />
-
   return scenarios.map(({ _id, name }) => (
     <ScenarioButton key={_id} text={name} id={_id} />
   ))

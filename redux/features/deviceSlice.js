@@ -52,6 +52,19 @@ const deviceSlice = createSlice({
         state.loading = false
         state.error = action.payload
       })
+      .addCase(createDevice.pending, (state) => {
+        state.loading = true
+        state.error = null
+      })
+      .addCase(createDevice.fulfilled, (state, action) => {
+        state.loading = false
+        state.devices = [...state.devices, action.payload]
+        state.error = null
+      })
+      .addCase(createDevice.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.payload
+      })
   },
 })
 
@@ -65,17 +78,41 @@ export const fetchDevices = createAsyncThunk(
       const devices = data.metadata.devices
 
       const mqttClient = MQTTCLient.getInstance()
-      devices.forEach(({ topic }) =>
-        mqttClient.subscribe(getAdafruitKey(topic), (err) => {
-          if (err) thunkAPI.rejectWithValue('Failed to subscribe ' + topic)
 
-          console.log('Subscribed to ' + topic)
-        })
-      )
+      const deviceTopics = devices.map(({ topic }) => getAdafruitKey(topic))
+      mqttClient.subscribe(deviceTopics, (err) => {
+        if (err) return thunkAPI.rejectWithValue('Failed to subscribe sensor')
+        console.log(`Subscribed to ` + deviceTopics.join('\n'))
+      })
 
       return devices
     } catch (error) {
       return thunkAPI.rejectWithValue('There is an error in fetching devices')
+    }
+  }
+)
+
+export const createDevice = createAsyncThunk(
+  'devices/createDevice',
+  async ({ token, device }, thunkAPI) => {
+    try {
+      const instance = createInstance(token)
+      const { data } = await instance.post('/devices', device)
+      const newDevice = data.metadata
+
+      // Subscribe to mqtt
+      const mqttClient = MQTTCLient.getInstance()
+      mqttClient.subscribe(getAdafruitKey(newDevice.topic), (err) => {
+        if (err)
+          return thunkAPI.rejectWithValue(
+            'Failed to subscribe ' + newDevice.topic
+          )
+
+        console.log('Subscribed to ' + newDevice.topic)
+      })
+      return newDevice
+    } catch (error) {
+      return thunkAPI.rejectWithValue('There is an error in creating device')
     }
   }
 )

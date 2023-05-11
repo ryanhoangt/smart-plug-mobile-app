@@ -35,17 +35,24 @@ import {
 } from '../../redux/features/scenarioSlice'
 
 function HomeScreen() {
+  const dispatch = useDispatch()
+  const { token } = useContext(AuthContext)
+  const [loading, setLoading] = useState(false)
+  const onReload = async () => {
+    setLoading(true)
+    await Promise.all([
+      dispatch(fetchDevices(token)),
+      dispatch(fetchScenarios(token)),
+    ])
+    setLoading(false)
+  }
   // HANDLERS
   function addNewDeviceHandler() {
     sheetRef.current.snapTo(0)
   }
 
   // CONTEXTS, STATES, REFS
-  const { token } = useContext(AuthContext)
-  const { id } = useContext(UserContext)
   const sheetRef = useRef(null)
-
-  const [loading, setLoading] = useState(false)
 
   function onFormCancel() {
     sheetRef.current.snapTo(2)
@@ -56,7 +63,7 @@ function HomeScreen() {
       <ScrollView
         style={styles.homeContainer}
         refreshControl={
-          <RefreshControl refreshing={loading} onRefresh={() => {}} />
+          <RefreshControl refreshing={loading} onRefresh={onReload} />
         }
       >
         <StatusBar style="auto" />
@@ -81,20 +88,13 @@ function HomeScreen() {
           <DeviceList />
         </View>
       </ScrollView>
-      {/* <BottomSheet
+      <BottomSheet
         ref={sheetRef}
-        snapPoints={[600, 500, -100]}
+        snapPoints={[500, 400, -100]}
         borderRadius={20}
-        renderContent={() => (
-          <AddDeviceForm
-            onCancel={onFormCancel}
-            fetchDevicesAndScenarios={fetchData}
-            token={token}
-            userId={id}
-          />
-        )}
+        renderContent={() => <AddDeviceForm onCancel={onFormCancel} />}
         initialSnap={2}
-      /> */}
+      />
     </SafeAreaView>
   )
 }
