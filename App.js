@@ -64,26 +64,27 @@ function AuthStack() {
   )
 }
 
+const mqttClient = MQTTCLient.getInstance()
 function AuthenticatedStack() {
   // Establish MQTT connection
-  const mqttClient = MQTTCLient.getInstance()
   const { token } = useContext(AuthContext)
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(!mqttClient.connected)
   const [error, setError] = useState(null)
 
-  mqttClient.on('connect', () => {
-    setLoading(false)
-    setError(null)
-  })
-  mqttClient.on('error', (err) => {
-    setLoading(true)
-    setError(err.message)
-  })
-  mqttClient.on('message', (topic, message) => {
-    console.log('message')
-    dispatch(updateState({ topic, message: message.toString() }))
-  })
+  useEffect(() => {
+    mqttClient.on('connect', () => {
+      setLoading(false)
+      setError(null)
+    })
+    mqttClient.on('error', (err) => {
+      setLoading(true)
+      setError(err.message)
+    })
+    mqttClient.on('message', (topic, message) => {
+      dispatch(updateState({ topic, message: message.toString() }))
+    })
+  }, [])
 
   useEffect(() => {
     dispatch(fetchDevices(token))
